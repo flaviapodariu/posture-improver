@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "490831608623",
+    "project_id": "postureimprover-c829b",
+    "storage_bucket": "postureimprover-c829b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:490831608623:android:889f256399571f47aa7fda",
+        "android_client_info": {
+          "package_name": "com.licenta.postureimprover"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "490831608623-8lqn40k10rs698uglm2j7vaqak0ie7il.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkgMtgGjrvPeYYxnS79lOYi8bKitTsu48"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "490831608623-8lqn40k10rs698uglm2j7vaqak0ie7il.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
