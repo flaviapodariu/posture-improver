@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.licenta.postureimprover.util.Navigation
+import com.licenta.postureimprover.navigation.Navigation
 import com.licenta.postureimprover.ui.theme.PostureImproverTheme
 import dagger.hilt.android.AndroidEntryPoint
 

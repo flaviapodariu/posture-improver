@@ -6,7 +6,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.licenta.postureimprover.util.Routes
+import com.licenta.postureimprover.navigation.Routes
 import timber.log.Timber
 
 lateinit var auth: FirebaseAuth
@@ -36,7 +36,7 @@ fun login(email: String, password: String, navController: NavHostController){
     val res = auth.signInWithEmailAndPassword(email, password)
                   .addOnCompleteListener{ task ->
                       if(task.isSuccessful) {
-                          navController.navigate(Routes.Dashboard.passArgs(email))
+                          navController.navigate(Routes.Camera.route)
                       }
                       else {
                           Timber.tag("FIREBASE").d("sign in failed")
