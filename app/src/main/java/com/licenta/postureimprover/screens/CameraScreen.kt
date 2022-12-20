@@ -2,6 +2,7 @@ package com.licenta.postureimprover.screens
 
 import android.content.Context
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +24,7 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.licenta.postureimprover.domain.FrameAnalyzer
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
 import timber.log.Timber
 
@@ -54,8 +56,9 @@ fun CameraComponent(cameraViewModel: CameraViewModel = hiltViewModel()) {
             cameraViewModel.provider,
             cameraViewModel.selector,
             cameraViewModel.preview,
+            cameraViewModel.getImageAnalysis(),
             LocalContext.current,
-            LocalLifecycleOwner.current
+            LocalLifecycleOwner.current,
         )
     }
     
@@ -66,6 +69,7 @@ fun CameraView(
     provider: ProcessCameraProvider,
     selector: CameraSelector,
     preview: Preview,
+    imageAnalysis: ImageAnalysis,
     context: Context,
     lifecycleOwner: LifecycleOwner,
 
@@ -83,7 +87,9 @@ fun CameraView(
             provider.bindToLifecycle(
                 lifecycleOwner,
                 selector,
-                preview
+                preview,
+                imageAnalysis
+
             )
             preview.setSurfaceProvider(previewView.surfaceProvider)
         }
