@@ -14,11 +14,13 @@ import com.licenta.postureimprover.db.login
 import com.licenta.postureimprover.db.register
 import com.licenta.postureimprover.ui.styles.authChangeOptionButtonStyle
 import com.licenta.postureimprover.navigation.Routes
+import com.licenta.postureimprover.screens.components.ProtectedTextInput
+import com.licenta.postureimprover.screens.components.VisibleTextInput
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 @Composable
-fun LoginComponent(
+fun LoginScreen(
     navController: NavHostController,
     authViewModel: AuthenticationViewModel = hiltViewModel()
 ) {
@@ -45,6 +47,13 @@ fun LoginComponent(
             content = { Text("Log In") }
         )
         SignUpRedirect(navController)
+        
+//     temp solution
+        Button(
+            onClick = { navController.navigate(Routes.Dashboard.passArgs("test")) },
+            content = { Text("Log in as visitor")}
+        )
+
     }
 }
 
@@ -65,7 +74,7 @@ fun SignUpRedirect(navController: NavHostController) {
 
 
 @Composable
-fun SignUpComponent(
+fun SignUpScreen(
     navController: NavHostController,
     authViewModel: AuthenticationViewModel = hiltViewModel()
 ) {
@@ -90,7 +99,11 @@ fun SignUpComponent(
         Button(
             onClick = { runBlocking {
                 launch{
-                    register(authViewModel.email, authViewModel.password, navController)
+                    register(
+                        authViewModel.email,
+                        authViewModel.password,
+                        authViewModel.confirmPassword,
+                        navController)
                 }
             } },
             content = { Text("Sign Up") }
@@ -116,8 +129,4 @@ fun LogInRedirect(navController: NavHostController) {
         )
     }
 
-}
-
-class TextFieldState {
-    var text: String by mutableStateOf("")
 }

@@ -1,5 +1,7 @@
 package com.licenta.postureimprover.db
 
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
@@ -11,15 +13,22 @@ import timber.log.Timber
 
 lateinit var auth: FirebaseAuth
 
-fun register(email: String, password:String, navController: NavHostController){
+fun register(email: String, password:String, confirmPass: String, navController: NavHostController){
     auth = Firebase.auth
     try {
-        val res = auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    navController.navigate(Routes.Dashboard.passArgs(email))
+
+        if (password == confirmPass){
+            val res = auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        navController.navigate(Routes.Dashboard.passArgs(email))
+                    }
                 }
-            }
+        }
+        else{
+        }
+
+
     }
     catch (e: FirebaseAuthUserCollisionException) {
         Timber.tag("FIREBASE").d("sign up failed: %s", e.stackTrace)
@@ -36,7 +45,7 @@ fun login(email: String, password: String, navController: NavHostController){
     val res = auth.signInWithEmailAndPassword(email, password)
                   .addOnCompleteListener{ task ->
                       if(task.isSuccessful) {
-                          navController.navigate(Routes.Camera.route)
+                          navController.navigate(Routes.Dashboard.passArgs(email))
                       }
                       else {
                           Timber.tag("FIREBASE").d("sign in failed")

@@ -1,12 +1,14 @@
 package com.licenta.postureimprover.domain
 
+import android.graphics.PointF
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.compose.ui.graphics.Paint
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
-import com.google.mlkit.vision.pose.PoseDetector
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
+import com.licenta.postureimprover.ui.theme.Orange50
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -21,12 +23,15 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
     override fun analyze(imageProxy: ImageProxy) {
         val poseDetector = PoseDetection.getClient(options)
         val mediaImage = imageProxy.image
-        if (mediaImage != null){
-            val inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+        if (mediaImage != null) {
+            val inputImage =
+                InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
             poseDetector.process(inputImage)
                 .addOnSuccessListener { landmarks ->
                     val bodyLandmarks = landmarks.allPoseLandmarks
-                    getResults(bodyLandmarks)
+                    if (bodyLandmarks.size != 0)
+                        Timber.tag("lands").d(bodyLandmarks[0].toString())
+                    drawResults(landmarksToPositions(bodyLandmarks), inputImage)
                     imageProxy.close()
                 }
                 .addOnFailureListener { error ->
@@ -36,12 +41,43 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
 
         }
     }
-}
 
-fun FrameAnalyzer.getResults(landmarks: List<PoseLandmark>){
+    private fun FrameAnalyzer.landmarksToPositions(pose: List<PoseLandmark>): Map<String, PointF> {
+        return mapOf(
+            "leftShoulder" to pose[PoseLandmark.LEFT_SHOULDER].position,
+            "rightShoulder" to pose[PoseLandmark.RIGHT_SHOULDER].position,
+            "leftElbow" to pose[PoseLandmark.LEFT_ELBOW].position,
+            "rightElbow" to pose[PoseLandmark.RIGHT_ELBOW].position,
+            "leftWrist" to pose[PoseLandmark.LEFT_WRIST].position,
+            "rightWrist" to pose[PoseLandmark.RIGHT_WRIST].position,
+            "leftHip" to pose[PoseLandmark.LEFT_HIP].position,
+            "rightHip" to pose[PoseLandmark.RIGHT_HIP].position,
+            "leftKnee" to pose[PoseLandmark.LEFT_KNEE].position,
+            "rightKnee" to pose[PoseLandmark.RIGHT_KNEE].position,
+            "leftAnkle" to pose[PoseLandmark.LEFT_ANKLE].position,
+            "rightAnkle" to pose[PoseLandmark.RIGHT_ANKLE].position,
+            "leftHeel" to pose[PoseLandmark.LEFT_HEEL].position,
+            "rightHeel" to pose[PoseLandmark.RIGHT_HEEL].position,
+            "leftFootIndex" to pose[PoseLandmark.LEFT_FOOT_INDEX].position,
+            "rightFootIndex" to pose[PoseLandmark.RIGHT_FOOT_INDEX].position,
+            "nose" to pose[PoseLandmark.NOSE].position,
+            "leftEar" to pose[PoseLandmark.LEFT_EAR].position,
+            "rightEar" to pose[PoseLandmark.RIGHT_EAR].position
+        )
 
-    for(landmark in landmarks){
-        Timber.tag("pliz").i("%s%s", landmark.landmarkType.toString(), landmark.position.toString())
     }
 
+    fun FrameAnalyzer.drawResults(
+        map: Map<String, PointF>,
+        image: InputImage
+    ) {
+
+        val paint = Paint().apply {
+            color = Orange50
+            strokeWidth = 5.0f
+        }
+
+    }
 }
+
+

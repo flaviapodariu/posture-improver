@@ -24,14 +24,13 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import com.licenta.postureimprover.domain.FrameAnalyzer
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
 import timber.log.Timber
 
 
 @ExperimentalPermissionsApi
 @Composable
-fun CameraComponent(cameraViewModel: CameraViewModel = hiltViewModel()) {
+fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
     val permissions = rememberPermissionState(
         permission = android.Manifest.permission.CAMERA
     )
@@ -79,6 +78,7 @@ fun CameraView(
             implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         }
     }
+
 
 //    only recompose if selector is changed (from back to front facing camera)
     LaunchedEffect(key1 = selector , block ={

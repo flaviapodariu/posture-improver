@@ -2,7 +2,6 @@ package com.licenta.postureimprover.di
 
 import android.app.Application
 import androidx.camera.core.CameraSelector
-import androidx.camera.core.CameraSelector.LENS_FACING_BACK
 import androidx.camera.core.CameraSelector.LENS_FACING_FRONT
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider

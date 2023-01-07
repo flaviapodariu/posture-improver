@@ -1,29 +1,31 @@
 package com.licenta.postureimprover.navigation
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.licenta.postureimprover.screens.CameraComponent
-import com.licenta.postureimprover.screens.LoginComponent
-import com.licenta.postureimprover.screens.SignUpComponent
+import com.licenta.postureimprover.screens.CameraScreen
+import com.licenta.postureimprover.screens.DashboardScreen
+import com.licenta.postureimprover.screens.LoginScreen
+import com.licenta.postureimprover.screens.SignUpScreen
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun Navigation() {
-    val navController = rememberNavController()
+fun Navigation(navController: NavHostController) {
 
-    NavHost(navController = navController, startDestination = Routes.Login.route) {
-
+    NavHost(
+        navController = navController,
+        startDestination = Routes.Login.route
+    ) {
         composable(route=Routes.Login.route) {
-            LoginComponent(navController = navController)
+            LoginScreen(navController = navController)
         }
         composable(route=Routes.SignUp.route){
-            SignUpComponent(navController =  navController)
+            SignUpScreen(navController =  navController)
         }
         composable(
             route=Routes.Dashboard.route + "/{email}",
@@ -35,20 +37,16 @@ fun Navigation() {
             )
 
         ){
-            entry -> Dashboard(email = entry.arguments?.getString("email"))
+            entry ->
+            entry.arguments?.getString("email")?.let { DashboardScreen(navController , email = it) }
         }
 
         composable(route=Routes.Camera.route){
-            CameraComponent()
+            CameraScreen()
         }
 
     }
     
-}
-
-@Composable
-fun Dashboard(email: String?) {
-    Text(text = "hello, $email")
 }
 
 sealed class Routes(val route: String) {
