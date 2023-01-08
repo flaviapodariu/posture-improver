@@ -7,11 +7,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.licenta.postureimprover.db.login
-import com.licenta.postureimprover.db.register
 import com.licenta.postureimprover.ui.styles.authChangeOptionButtonStyle
 import com.licenta.postureimprover.navigation.Routes
 import com.licenta.postureimprover.screens.components.ProtectedTextInput
@@ -32,16 +31,18 @@ fun LoginScreen(
 
         VisibleTextInput(
             text = authViewModel.email,
+            label = "Email",
             onTextChanged = { authViewModel.onEmailChanged(it) }
         )
         ProtectedTextInput(
             text = authViewModel.password,
+            label = "Password",
             onTextChanged = { authViewModel.onPasswordChanged(it) }
         )
         Button(
             onClick = { runBlocking {
                 launch{
-                    login(authViewModel.email, authViewModel.password, navController)
+                    authViewModel.login(navController)
                 }
             } },
             content = { Text("Log In") }
@@ -78,6 +79,7 @@ fun SignUpScreen(
     navController: NavHostController,
     authViewModel: AuthenticationViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
     Column(
         Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -85,25 +87,24 @@ fun SignUpScreen(
     ){
         VisibleTextInput(
             text = authViewModel.email,
+            label = "Email",
             onTextChanged = { authViewModel.onEmailChanged(it) }
         )
         ProtectedTextInput(
             text = authViewModel.password,
+            label = "Password",
             onTextChanged = { authViewModel.onPasswordChanged(it) }
         )
 
         ProtectedTextInput(
             text = authViewModel.confirmPassword,
+            label = "Password",
             onTextChanged = { authViewModel.onConfirmPasswordChanged(it) }
         )
         Button(
             onClick = { runBlocking {
                 launch{
-                    register(
-                        authViewModel.email,
-                        authViewModel.password,
-                        authViewModel.confirmPassword,
-                        navController)
+                    authViewModel.register(navController, context)
                 }
             } },
             content = { Text("Sign Up") }

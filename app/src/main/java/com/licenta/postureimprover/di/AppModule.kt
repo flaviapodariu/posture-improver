@@ -1,10 +1,12 @@
 package com.licenta.postureimprover.di
 
 import android.app.Application
+import android.content.Context
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraSelector.LENS_FACING_FRONT
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.compose.ui.platform.LocalContext
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +46,5 @@ object AppModule {
     fun provideCameraExecutor(): ExecutorService {
         return Executors.newSingleThreadExecutor()
     }
-
 
 }

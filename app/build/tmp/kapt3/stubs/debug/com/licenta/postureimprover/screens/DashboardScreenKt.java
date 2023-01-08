@@ -6,7 +6,6 @@ import java.lang.System;
 public final class DashboardScreenKt {
     
     @androidx.compose.runtime.Composable()
-    @kotlin.OptIn(markerClass = {androidx.compose.material3.ExperimentalMaterial3Api.class})
     public static final void DashboardScreen(@org.jetbrains.annotations.NotNull()
     androidx.navigation.NavHostController navController, @org.jetbrains.annotations.NotNull()
     java.lang.String email) {

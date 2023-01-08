@@ -50,13 +50,13 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
     } )
 
     if(permissions.status.isGranted){
-
+        val context = LocalContext.current
         CameraView(
             cameraViewModel.provider,
             cameraViewModel.selector,
             cameraViewModel.preview,
-            cameraViewModel.getImageAnalysis(),
-            LocalContext.current,
+            cameraViewModel.getImageAnalysis(context),
+            context,
             LocalLifecycleOwner.current,
         )
     }
@@ -83,6 +83,7 @@ fun CameraView(
 //    only recompose if selector is changed (from back to front facing camera)
     LaunchedEffect(key1 = selector , block ={
         try{
+
             provider.unbindAll()
             provider.bindToLifecycle(
                 lifecycleOwner,

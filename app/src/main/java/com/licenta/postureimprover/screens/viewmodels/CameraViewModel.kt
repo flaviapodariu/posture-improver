@@ -1,5 +1,6 @@
 package com.licenta.postureimprover.screens.viewmodels
 
+import android.content.Context
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
@@ -24,10 +25,11 @@ class CameraViewModel @Inject constructor(
         selector = cameraSelector
     }
 
-    fun getImageAnalysis(): ImageAnalysis {
+    fun getImageAnalysis(context: Context): ImageAnalysis {
         return ImageAnalysis.Builder()
             .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
             .build().also{it ->
+                analyzer.context = context
                 it.setAnalyzer(executor, analyzer)
             }
     }

@@ -2476,6 +2476,8 @@ navigation nav_graph
 plurals mtrl_badge_content_description
 raw firebase_common_keep
 raw keep
+string Home
+string Settings
 string abc_action_bar_home_description
 string abc_action_bar_up_description
 string abc_action_menu_overflow_description

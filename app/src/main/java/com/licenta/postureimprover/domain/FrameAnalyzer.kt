@@ -1,9 +1,13 @@
 package com.licenta.postureimprover.domain
 
+import android.content.Context
 import android.graphics.PointF
+import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.platform.LocalContext
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
@@ -19,8 +23,11 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
         .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE)
         .build()
 
+    lateinit var context: Context
+
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
+        var times = 0
         val poseDetector = PoseDetection.getClient(options)
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
@@ -29,15 +36,24 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
             poseDetector.process(inputImage)
                 .addOnSuccessListener { landmarks ->
                     val bodyLandmarks = landmarks.allPoseLandmarks
-                    if (bodyLandmarks.size != 0)
-                        Timber.tag("lands").d(bodyLandmarks[0].toString())
-                    drawResults(landmarksToPositions(bodyLandmarks), inputImage)
-                    imageProxy.close()
+                    // if person was detected list is not empty
+                    if (bodyLandmarks.isNotEmpty()) {
+                        drawResults(landmarksToPositions(bodyLandmarks), inputImage)
+                        Timber.tag("landmarkType").d(bodyLandmarks[0].position.toString())
+                        imageProxy.close()
+                    } else {
+                        times ++
+                        Toast.makeText(
+                            context,
+                            "Person is not inside capture screen!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Timber.tag("times").d(times.toString())
+                    }
                 }
-                .addOnFailureListener { error ->
-                    Timber.tag("Detection").d("${error.stackTrace}")
-                }
-
+                    .addOnFailureListener { error ->
+                        Timber.tag("Detection").d("${error.stackTrace}")
+                    }
 
         }
     }
@@ -78,6 +94,7 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
         }
 
     }
+
 }
 
 

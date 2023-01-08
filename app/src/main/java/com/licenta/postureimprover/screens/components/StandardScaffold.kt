@@ -4,21 +4,27 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import com.licenta.postureimprover.domain.models.BottomNavIcon
 import com.licenta.postureimprover.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StandardScaffold(
-    navController: NavController,
+    navController: NavHostController,
     icons: List<BottomNavIcon> = listOf(
         BottomNavIcon(
-            route = Routes.Dashboard.route,
+            route = Routes.Dashboard.passArgs("anonymous for now"),
             icon = Icons.Rounded.Home,
             description = "Home"
+        ),
+        BottomNavIcon(
+            route = Routes.Settings.route,
+            icon = Icons.Rounded.Settings,
+            description = "Settings"
         )
 
     //TODO add bottom nav icons here
@@ -49,7 +55,10 @@ fun StandardScaffold(
                             icon = { Icon(icon.icon, contentDescription = icon.description) },
                             label = { Text(icon.description) },
                             selected = selectedIcon == index,
-                            onClick = { selectedIcon = index }
+                            onClick = {
+                                selectedIcon = index
+                                navController.navigate(icon.route)
+                            }
                         )
                     }
                 }

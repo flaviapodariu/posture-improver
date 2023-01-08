@@ -8,10 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.licenta.postureimprover.screens.CameraScreen
-import com.licenta.postureimprover.screens.DashboardScreen
-import com.licenta.postureimprover.screens.LoginScreen
-import com.licenta.postureimprover.screens.SignUpScreen
+import com.licenta.postureimprover.screens.*
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -24,7 +21,7 @@ fun Navigation(navController: NavHostController) {
         composable(route=Routes.Login.route) {
             LoginScreen(navController = navController)
         }
-        composable(route=Routes.SignUp.route){
+        composable(route=Routes.SignUp.route) {
             SignUpScreen(navController =  navController)
         }
         composable(
@@ -41,8 +38,12 @@ fun Navigation(navController: NavHostController) {
             entry.arguments?.getString("email")?.let { DashboardScreen(navController , email = it) }
         }
 
-        composable(route=Routes.Camera.route){
+        composable(route=Routes.Camera.route) {
             CameraScreen()
+        }
+
+        composable(route =Routes.Settings.route) {
+            SettingsScreen(navController)
         }
 
     }
@@ -54,6 +55,7 @@ sealed class Routes(val route: String) {
     object Dashboard : Routes("dashboard")
     object SignUp : Routes( "signup")
     object Camera : Routes("camera")
+    object Settings: Routes("settings")
 
     fun passArgs(vararg args: String) : String{
         return buildString {

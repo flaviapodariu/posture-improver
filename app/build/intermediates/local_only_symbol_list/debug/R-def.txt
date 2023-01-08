@@ -18,6 +18,8 @@ mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 mipmap icon
 navigation nav_graph
+string Home
+string Settings
 string app_name
 string default_web_client_id
 string gcm_defaultSenderId

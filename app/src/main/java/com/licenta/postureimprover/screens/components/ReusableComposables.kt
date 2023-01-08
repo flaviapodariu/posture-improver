@@ -7,11 +7,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VisibleTextInput(
     text: String,
+    label: String,
     onTextChanged: (String) -> Unit
 ) {
 
@@ -19,8 +21,8 @@ fun VisibleTextInput(
     OutlinedTextField(
         value = text,
         onValueChange = onTextChanged,
-        label = { Text(text= text) },
-        placeholder = { Text(text= text) },
+        label = { Text(text= label) },
+        placeholder = { Text(text= "") },
         keyboardOptions = keys,
         singleLine = true,
         maxLines = 1
@@ -32,6 +34,7 @@ fun VisibleTextInput(
 @Composable
 fun ProtectedTextInput(
     text: String,
+    label: String,
     onTextChanged: (String) -> Unit
 ) {
 
@@ -39,8 +42,8 @@ fun ProtectedTextInput(
     OutlinedTextField(
         value = text,
         onValueChange = onTextChanged,
-        label = { Text(text= text) },
-        placeholder = { Text(text= text) },
+        label = { Text(text= label) },
+        placeholder = { Text(text= "") },
         keyboardOptions = keys,
         visualTransformation = PasswordVisualTransformation(),
         singleLine = true,
