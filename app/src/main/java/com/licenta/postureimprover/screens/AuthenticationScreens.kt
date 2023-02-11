@@ -64,7 +64,7 @@ fun SignUpRedirect(navController: NavHostController) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ){
-        Text(text= "Don't have an account?")
+        Text(text= "Don't have an account? ")
         ClickableText(
             text = AnnotatedString(text="Sign Up"),
             style= authChangeOptionButtonStyle(),
@@ -98,7 +98,7 @@ fun SignUpScreen(
 
         ProtectedTextInput(
             text = authViewModel.confirmPassword,
-            label = "Password",
+            label = "Confirm password",
             onTextChanged = { authViewModel.onConfirmPasswordChanged(it) }
         )
         Button(
@@ -115,14 +115,13 @@ fun SignUpScreen(
 
 
 
-
 @Composable
 fun LogInRedirect(navController: NavHostController) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text= "Already have an account?")
+        Text(text= "Already have an account? ")
         ClickableText(
             text = AnnotatedString(text="Log In"),
             style= authChangeOptionButtonStyle(),

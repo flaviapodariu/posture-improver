@@ -5,10 +5,9 @@ import android.graphics.PointF
 import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import androidx.compose.runtime.currentCompositionLocalContext
 import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.platform.LocalContext
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
@@ -39,8 +38,7 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                     // if person was detected list is not empty
                     if (bodyLandmarks.isNotEmpty()) {
                         drawResults(landmarksToPositions(bodyLandmarks), inputImage)
-                        Timber.tag("landmarkType").d(bodyLandmarks[0].position.toString())
-                        imageProxy.close()
+                        Timber.tag("landmarkType").d(landmarksToString(bodyLandmarks))
                     } else {
                         times ++
                         Toast.makeText(
@@ -49,13 +47,23 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                             Toast.LENGTH_SHORT
                         ).show()
                         Timber.tag("times").d(times.toString())
+
                     }
                 }
                     .addOnFailureListener { error ->
                         Timber.tag("Detection").d("${error.stackTrace}")
                     }
+                .also { imageProxy.close() }  // avoid blocking the thread or the camera preview
 
         }
+    }
+
+    private fun FrameAnalyzer.landmarksToString(landmarks: List<PoseLandmark>): String {
+        var ans = ""
+        for (l in landmarks) {
+            ans += l.landmarkType.toString() + "-> (" + l.position.x.toString() + ", " + l.position.y.toString() + "); "
+        }
+        return ans
     }
 
     private fun FrameAnalyzer.landmarksToPositions(pose: List<PoseLandmark>): Map<String, PointF> {

@@ -2,13 +2,12 @@ package com.licenta.postureimprover.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.ExitToApp
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
 import androidx.navigation.NavHostController
 import com.licenta.postureimprover.navigation.Routes
 
@@ -18,13 +17,18 @@ fun SettingsScreen(navController: NavHostController) {
     Column(modifier = Modifier.fillMaxSize()) {
 
         ListItem(
-          headlineText = { Text(text = "Log Out") }
-        )
+            modifier = Modifier.fillMaxWidth(),
+            headlineText = { Text(text = "Log Out") },
+            trailingContent = {
+                IconButton(
+                    onClick = { navController.navigate(Routes.Login.route) }
+                ){
+                    Icon(
+                        imageVector = Icons.Rounded.ExitToApp,
+                        contentDescription = "exit"
+                    )
 
-        ClickableText(
-            text = AnnotatedString(text="Log Out"),
-            onClick = {
-                navController.navigate(Routes.Login.route)
+                }
             }
         )
 
