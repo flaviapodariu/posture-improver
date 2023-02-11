@@ -22,7 +22,7 @@ val stringLabels = mapOf(
 fun mockup(a: Boolean, b: Boolean) {
 
 }
-//import
+
 fun main() {
     val (train, test) = mnist()
     val model = Sequential.of(
