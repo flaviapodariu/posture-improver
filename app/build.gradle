@@ -42,7 +42,6 @@ android {
     }
     buildFeatures {
         compose true
-        viewBinding true
     }
     composeOptions {
         kotlinCompilerExtensionVersion '1.1.1'
@@ -115,9 +114,7 @@ dependencies {
 //    Media pipe pose
     implementation 'com.google.mlkit:pose-detection-accurate:18.0.0-beta3'
 
-//    KotlinDL
-    implementation 'org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.1'
-    implementation "org.jetbrains.kotlinx:kotlin-deeplearning-onnx:0.5.1"
-
+//    Control system ui (status/ nav bar)
+    implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
 
 }

@@ -54,7 +54,7 @@ class AuthenticationViewModel @Inject constructor(): ViewModel() {
         auth = Firebase.auth
         try {
 
-            if (password == confirmPassword) {
+            if (password == confirmPassword && password.length >= 8) {
                 auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
