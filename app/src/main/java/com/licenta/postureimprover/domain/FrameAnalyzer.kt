@@ -1,20 +1,14 @@
 package com.licenta.postureimprover.domain
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.PointF
 import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
-import androidx.compose.ui.graphics.toArgb
-import androidx.core.graphics.alpha
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
-import com.licenta.postureimprover.ui.theme.Orange50
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject

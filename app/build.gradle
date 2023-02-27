@@ -4,7 +4,8 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
-    id 'org.jetbrains.kotlinx.kotlin-deeplearning-gradle-plugin' version '0.5.1'
+    id 'com.google.devtools.ksp' version '1.8.0-1.0.8'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -44,7 +45,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.1.1'
+        kotlinCompilerExtensionVersion '1.4.1'
     }
     packagingOptions {
         resources {
@@ -65,13 +66,13 @@ dependencies {
     implementation 'androidx.compose.material3:material3:1.1.0-alpha03'
 
 //    Firebase
-    implementation 'com.google.firebase:firebase-database-ktx:20.1.0'
     implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
-    
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.3'
+
 //    Testing
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
@@ -116,5 +117,20 @@ dependencies {
 
 //    Control system ui (status/ nav bar)
     implementation "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
+
+    def ktor_version = "2.2.3"
+    implementation "io.ktor:ktor-client-android:$ktor_version"
+    implementation "org.jetbrains.kotlin:kotlin-serialization"
+    implementation "io.ktor:ktor-serialization-kotlinx-json:$ktor_version"
+    implementation "io.ktor:ktor-client-content-negotiation:$ktor_version"
+    implementation "io.ktor:ktor-client-logging:$ktor_version"
+
+    def room_version = "2.5.0"
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+    // To use Kotlin Symbol Processing (KSP)
+    ksp "androidx.room:room-compiler:$room_version"
+
+    testImplementation "androidx.room:room-testing:$room_version"
 
 }

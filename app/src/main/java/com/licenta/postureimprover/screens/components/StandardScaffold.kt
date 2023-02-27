@@ -8,8 +8,7 @@ import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.navigation.NavHostController
-import com.licenta.postureimprover.domain.models.BottomNavIcon
-import com.licenta.postureimprover.navigation.Routes
+import com.licenta.postureimprover.screens.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

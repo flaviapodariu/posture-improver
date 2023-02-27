@@ -1,4 +1,4 @@
-package com.licenta.postureimprover.ui.theme
+package com.licenta.postureimprover.theme
 
 import android.app.Activity
 import android.os.Build

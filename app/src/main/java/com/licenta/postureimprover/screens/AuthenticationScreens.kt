@@ -1,28 +1,47 @@
 package com.licenta.postureimprover.screens
 
-import androidx.compose.foundation.layout.*
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import com.licenta.postureimprover.ui.styles.authChangeOptionButtonStyle
-import com.licenta.postureimprover.navigation.Routes
+import com.licenta.postureimprover.data.util.AuthResponse
 import com.licenta.postureimprover.screens.components.ProtectedTextInput
 import com.licenta.postureimprover.screens.components.VisibleTextInput
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
+import com.licenta.postureimprover.ui.styles.authChangeOptionButtonStyle
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
+    goToDashboard: (String) -> Unit = {},
+    goToSignUp: () -> Unit = {},
     authViewModel: AuthenticationViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = authViewModel.authState, key2 = context) {
+        authViewModel.authState?.let {
+            when(it) {
+                is AuthResponse.Success ->
+                    goToDashboard(it.result.nickname)
+                is AuthResponse.Failure ->
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                else -> Unit
+            }
+        }
+    }
     Column(
         Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -40,18 +59,14 @@ fun LoginScreen(
             onTextChanged = { authViewModel.onPasswordChanged(it) }
         )
         Button(
-            onClick = { runBlocking {
-                launch{
-                    authViewModel.login(navController)
-                }
-            } },
+            onClick = { authViewModel.login() },
             content = { Text("Log In") }
         )
-        SignUpRedirect(navController)
+        SignUpRedirect(goToSignUp)
         
 //     temp solution
         Button(
-            onClick = { navController.navigate(Routes.Dashboard.passArgs("test")) },
+            onClick = { goToDashboard("test") },
             content = { Text("Log in as visitor")}
         )
 
@@ -59,7 +74,9 @@ fun LoginScreen(
 }
 
 @Composable
-fun SignUpRedirect(navController: NavHostController) {
+fun SignUpRedirect(
+    goToSignUp: () -> Unit
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -68,7 +85,7 @@ fun SignUpRedirect(navController: NavHostController) {
         ClickableText(
             text = AnnotatedString(text="Sign Up"),
             style= authChangeOptionButtonStyle(),
-            onClick = {navController.navigate(Routes.SignUp.route)}
+            onClick = { goToSignUp() }
         )
     }
 }
@@ -76,10 +93,24 @@ fun SignUpRedirect(navController: NavHostController) {
 
 @Composable
 fun SignUpScreen(
-    navController: NavHostController,
+    goToDashboard: (String) -> Unit = {},
+    goToLogin: () -> Unit,
     authViewModel: AuthenticationViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    
+    LaunchedEffect(key1 = authViewModel.authState, key2 = context) {
+        authViewModel.authState?.let {
+            when(it) {
+                is AuthResponse.Success ->
+                    goToDashboard(it.result.nickname)
+                is AuthResponse.Failure ->
+                    Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                else -> Unit
+            }
+
+        }
+    }
     Column(
         Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -90,6 +121,13 @@ fun SignUpScreen(
             label = "Email",
             onTextChanged = { authViewModel.onEmailChanged(it) }
         )
+
+        VisibleTextInput(
+            text = authViewModel.nickname,
+            label = "Nickname",
+            onTextChanged = { authViewModel.onNicknameChanged(it) }
+        )
+
         ProtectedTextInput(
             text = authViewModel.password,
             label = "Password",
@@ -102,21 +140,17 @@ fun SignUpScreen(
             onTextChanged = { authViewModel.onConfirmPasswordChanged(it) }
         )
         Button(
-            onClick = { runBlocking {
-                launch{
-                    authViewModel.register(navController, context)
-                }
-            } },
+            onClick = { authViewModel.register() },
             content = { Text("Sign Up") }
         )
-        LogInRedirect(navController)
+        LogInRedirect(goToLogin)
     }
 }
 
-
-
 @Composable
-fun LogInRedirect(navController: NavHostController) {
+fun LogInRedirect(
+    goToLogin: () -> Unit = {}
+) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -125,7 +159,7 @@ fun LogInRedirect(navController: NavHostController) {
         ClickableText(
             text = AnnotatedString(text="Log In"),
             style= authChangeOptionButtonStyle(),
-            onClick = {navController.navigate(Routes.Login.route)}
+            onClick = { goToLogin() }
         )
     }
 

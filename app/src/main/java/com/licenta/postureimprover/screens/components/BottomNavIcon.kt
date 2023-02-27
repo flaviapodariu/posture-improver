@@ -1,4 +1,4 @@
-package com.licenta.postureimprover.domain.models
+package com.licenta.postureimprover.screens.components
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

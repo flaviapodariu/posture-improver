@@ -44,6 +44,7 @@ import kotlin.math.*
  *    lordosis = 1
  *    head forward = 2
  *
+ *
  */
     fun lordosis(a: PointF, b:PointF, c:PointF): Boolean {
         val an = angle(c, b, a)

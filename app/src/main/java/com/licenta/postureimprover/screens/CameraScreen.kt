@@ -31,14 +31,14 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
-import com.licenta.postureimprover.ui.theme.Orange50
+import com.licenta.postureimprover.theme.Orange50
 import timber.log.Timber
 
 @ExperimentalPermissionsApi
 @Composable
 fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
     val permissions = rememberPermissionState(
-        permission = android.Manifest.permission.CAMERA
+        permission = android.Manifest.permission.CAMERA,
     )
 
     val lifecycleOwner = LocalLifecycleOwner.current

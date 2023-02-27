@@ -1,34 +1,35 @@
 package com.licenta.postureimprover
 
 import android.os.Bundle
-import android.view.Window
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.*
+import androidx.activity.viewModels
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.core.graphics.component1
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.android.material.appbar.AppBarLayout
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.licenta.postureimprover.navigation.Navigation
-import com.licenta.postureimprover.navigation.Routes
+import com.licenta.postureimprover.screens.navigation.Navigation
+import com.licenta.postureimprover.screens.navigation.Routes
 import com.licenta.postureimprover.screens.components.StandardScaffold
-import com.licenta.postureimprover.ui.theme.PostureImproverTheme
+import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
+import com.licenta.postureimprover.theme.PostureImproverTheme
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
+import io.ktor.client.*
+import io.ktor.client.engine.android.*
+import io.ktor.client.plugins.contentnegotiation.*
+import io.ktor.client.plugins.logging.*
+import io.ktor.serialization.kotlinx.json.*
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
+    private val authViewModel: AuthenticationViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             PostureImproverTheme {
                 Surface(
