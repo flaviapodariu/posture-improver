@@ -9,27 +9,29 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.licenta.postureimprover.screens.components.StandardScaffold
 import com.licenta.postureimprover.screens.navigation.Navigation
 import com.licenta.postureimprover.screens.navigation.Routes
-import com.licenta.postureimprover.screens.components.StandardScaffold
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
+import com.licenta.postureimprover.screens.viewmodels.MainViewModel
+import com.licenta.postureimprover.screens.viewmodels.TimerDialogViewModel
 import com.licenta.postureimprover.theme.PostureImproverTheme
 import dagger.hilt.android.AndroidEntryPoint
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.serialization.kotlinx.json.*
 
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val authViewModel: AuthenticationViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        installSplashScreen().apply {
+            this.setKeepOnScreenCondition {
+                mainViewModel.isLoading
+            }
+        }
         setContent {
             PostureImproverTheme {
                 Surface(
@@ -47,7 +49,7 @@ class MainActivity : ComponentActivity() {
                         )
 
                     ){
-                        Navigation(navController = navController)
+                        Navigation(navController = navController, nickname = mainViewModel.nickname)
                     }
 
                 }
@@ -58,7 +60,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-
     }
 
 }

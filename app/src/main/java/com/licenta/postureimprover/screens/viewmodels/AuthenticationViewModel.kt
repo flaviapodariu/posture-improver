@@ -1,27 +1,24 @@
 package com.licenta.postureimprover.screens.viewmodels
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.licenta.postureimprover.data.api.AuthenticationService
 import com.licenta.postureimprover.data.api.dto.AuthRes
 import com.licenta.postureimprover.data.api.dto.LoginReq
 import com.licenta.postureimprover.data.api.dto.RegisterReq
+import com.licenta.postureimprover.data.api.services.AuthService
 import com.licenta.postureimprover.data.util.AuthResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.ktor.client.*
-import io.ktor.client.engine.android.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.client.plugins.logging.*
-import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val authenticationService: AuthenticationService
+    private val authService: AuthService,
+    private val prefs: SharedPreferences
 ): ViewModel()
 {
     var email: String by mutableStateOf("")
@@ -47,24 +44,29 @@ class AuthenticationViewModel @Inject constructor(
         confirmPassword = confirmPassState
     }
 
+    fun onSuccesfulAuth(token: String) {
+        prefs.edit().putString("jwt", token).apply()
+
+
+    }
 
     fun login() {
         viewModelScope.launch {
-            authenticationService.login(LoginReq(email, password))?.let {
+            authService.login(LoginReq(email, password)).let {
                 authState = it
             }
         }
     }
 
     fun logout() {
-        authenticationService.logout()
+        prefs.edit().remove("jwt").apply()
         authState = null
     }
 
     fun register() {
         if (password == confirmPassword) {
             viewModelScope.launch {
-                authenticationService.register(RegisterReq(email, nickname, password))?.let {
+                authService.register(RegisterReq(email, nickname, password)).let {
                     authState = it
                 }
             }

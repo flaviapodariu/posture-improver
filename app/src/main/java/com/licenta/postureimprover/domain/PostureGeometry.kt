@@ -2,8 +2,11 @@ package com.licenta.postureimprover.domain
 
 import android.graphics.PointF
 import com.google.mlkit.vision.pose.PoseLandmark
+import com.licenta.postureimprover.domain.models.PostureCapture
 import timber.log.Timber
-import kotlin.math.*
+import kotlin.math.abs
+import kotlin.math.atan2
+import kotlin.math.pow
 
 /*
     Helpers for angle computation
@@ -13,7 +16,7 @@ import kotlin.math.*
 
  */
     fun radiansToDegrees(radians: Float): Float {
-        return ((radians * 2 * PI) / (2 * 180)).toFloat()
+        return ((radians * 180) / Math.PI).toFloat()
     }
 
     fun slope(a: PointF, b: PointF): Float {
@@ -24,19 +27,21 @@ import kotlin.math.*
         return (b.x - a.x).pow(2) + (b.y - a.y).pow(2)
     }
 
+/**
+ *  Reason for minus when computing angle:
+ *      segment AB (torso-shoulder) will always be under x+ axis, meaning
+ *      that the angle between x+ and AB would be clockwise => negative
+ *
+ *      the coordinates are given as positives, but the y values are practically negatives
+ *      because all the body landmarks are inside the 4h quadrant
+ */
 
     fun angle(a: PointF, b: PointF, c:PointF): Float {
-        val ab = distanceBetween(a, b)
-        val bc = distanceBetween(b, c)
-        val ac = distanceBetween(a, c)
-        var cosinus = (ab + ac - bc) / 2 * sqrt(ab) * sqrt(ac)
-        cosinus = (cosinus % (2 * PI)).toFloat()
-        Timber.tag("cos").d("cos $cosinus")
-        var degrees = abs(radiansToDegrees(acos(cosinus)))
-        if(degrees > 180) {
-            degrees = 360 - degrees
-        }
-        return degrees
+      //translate points by -b (b in the vertex of the angle)
+        val atanC = atan2(-c.y + b.y, c.x - b.x)
+        val atanA = atan2(-a.y + b.y, a.x - b.x)
+        Timber.tag("atans").d("${radiansToDegrees(atanC)}, ${radiansToDegrees(atanA)}")
+        return radiansToDegrees( atanC - atanA)
     }
 
 /**
@@ -46,42 +51,52 @@ import kotlin.math.*
  *
  *
  */
-    fun lordosis(a: PointF, b:PointF, c:PointF): Boolean {
-        val an = angle(c, b, a)
-        Timber.tag("lordosis").i(an.toString())
-        return true
-
-//        return false
+    fun lordosis(shoulders: PointF, torso: PointF, knees: PointF): Float {
+        val angle = angle(shoulders, torso, knees)
+        Timber.tag("lordosis").i("$angle")
+        return angle
     }
 
-    fun headForward(torso: PointF, shoulder:PointF, nose:PointF): Boolean {
-        val degrees = angle(torso, shoulder, nose)
-        Timber.tag("head").d(degrees.toString())
-        if (degrees > 119) {
-
-            return true
+    fun headForward(torso: PointF, shoulders:PointF, nose:PointF): Float {
+        var degrees = angle(torso, shoulders, nose)
+        // if points belong to the 2nd and 3rd quadrants, we get the outer angle
+        if(degrees > 180){
+            degrees = 360 - degrees
         }
-
-        return false
+        Timber.tag("head").d("$degrees")
+        return degrees
     }
 
-/**
- *  @return the sum of postural problems
- */
-    fun checkPosture(body: List<PoseLandmark>): Int {
-        var problems = 0
+
+    //maybe compute estimated height loss related
+    fun roundedShoulders(ears: PointF, shoulders: PointF) : Float {
+        return abs(ears.x - shoulders.x)
+    }
+
+    fun mean(left: PointF, right: PointF) : PointF {
+        return PointF(
+            (left.x + right.x) / 2,
+            (left.y + right.y) / 2
+        )
+    }
+
+fun checkPosture(body: List<PoseLandmark>): PostureCapture {
 
 //        if(lordosis(body[12].position, body[24].position, body[26].position))
 //            problems += 1
+    val nose = body[0].position
+    val ears = mean(body[7].position, body[8].position)
+    val shoulders = mean(body[11].position, body[12].position)
+    val torso = mean(body[23].position, body[24].position)
+    val knees = mean(body[25].position, body[26].position)
 
-        if(headForward(body[12].position, body[24].position, body[0].position) or
-                headForward(body[11].position, body[23].position, body[0].position)
-        ){
-            problems += 2
-        }
 
-        return problems
+    return PostureCapture(
+        headForward = headForward(torso, shoulders, nose),
+        lordosis = lordosis(shoulders, torso, knees),
+        roundedShoulders = roundedShoulders(ears, shoulders)
+    )
 
-    }
+}
 
 

@@ -1,14 +1,16 @@
 package com.licenta.postureimprover.screens.components
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.licenta.postureimprover.screens.navigation.Routes
+import com.licenta.postureimprover.screens.viewmodels.TimerDialogViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,12 +36,22 @@ fun StandardScaffold(
 ) {
 
     var selectedIcon by remember{ mutableStateOf(0) }
+    var showTimerInfo by remember { mutableStateOf(false) }
+
+
+    if(showTimerInfo) {
+        FullTimerDialog(
+            goToCameraScreen = {navController.navigate(Routes.Camera.route)},
+            dialogStillShowing = { stillShowing -> showTimerInfo = stillShowing }
+        )
+    }
 
     Scaffold(
             floatingActionButton = {
                 if (showBottomBar) {
                     FloatingActionButton(onClick = {
-                        navController.navigate(Routes.Camera.route)  //maybe use param function
+                        showTimerInfo = true
+
                     }) {
                         Icon(Icons.Rounded.Add, "Camera")
                     }
@@ -67,12 +79,6 @@ fun StandardScaffold(
         content(it)
     }
 }
-
-
-
-
-
-
 
 
 

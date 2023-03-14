@@ -1,6 +1,7 @@
-package com.licenta.postureimprover.data.api
+package com.licenta.postureimprover.data.api.services
 
 import android.content.SharedPreferences
+import com.licenta.postureimprover.data.api.ApiRoutes
 import com.licenta.postureimprover.data.api.dto.AuthRes
 import com.licenta.postureimprover.data.api.dto.LoginReq
 import com.licenta.postureimprover.data.api.dto.RegisterReq
@@ -12,11 +13,10 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import javax.inject.Inject
 
-class AuthenticationService @Inject constructor(
+class AuthServiceImpl @Inject constructor(
     private val client: HttpClient,
-    private val preferences: SharedPreferences
-)  {
-    suspend fun login(loginReq: LoginReq) : AuthResponse<AuthRes>{
+) : AuthService  {
+    override suspend fun login(loginReq: LoginReq) : AuthResponse<AuthRes>{
         return try {
             val res: AuthRes = client.post {
                 url(ApiRoutes.LOGIN)
@@ -24,8 +24,6 @@ class AuthenticationService @Inject constructor(
                 setBody(loginReq)
             }.body()
 
-            AuthResponse.Success(res)
-            preferences.edit().putString("jwt", res.token).apply()
             AuthResponse.Success(res)
 
         }
@@ -40,13 +38,7 @@ class AuthenticationService @Inject constructor(
 
         }
     }
-
-     fun logout() {
-         preferences.edit().remove("jwt").apply()
-    }
-
-
-    suspend fun register(registerUser: RegisterReq): AuthResponse<AuthRes>? {
+    override suspend fun register(registerUser: RegisterReq): AuthResponse<AuthRes> {
         return try {
             val res: AuthRes = client.post{
                 url(ApiRoutes.REGISTER)
@@ -54,13 +46,13 @@ class AuthenticationService @Inject constructor(
                 setBody(registerUser)
             }.body()   //content negotiation deserializes response body
 
-            preferences.edit().putString("jwt", res.token).apply()
             AuthResponse.Success(res)
 
         }
         catch(e:RedirectResponseException) {
             e.printStackTrace()
-            null
+            AuthResponse.Failure(e)
+
         }
         catch(e:ClientRequestException) {
             e.printStackTrace()
@@ -69,7 +61,7 @@ class AuthenticationService @Inject constructor(
         }
         catch(e:ServerResponseException) {
             e.printStackTrace()
-            null
+            AuthResponse.Failure(e)
         }
     }
 

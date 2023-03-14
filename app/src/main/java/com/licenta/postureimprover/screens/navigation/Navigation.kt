@@ -2,6 +2,7 @@ package com.licenta.postureimprover.screens.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.traceEventStart
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -13,13 +14,21 @@ import com.licenta.postureimprover.screens.*
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun Navigation(navController: NavHostController) {
-
+fun Navigation(navController: NavHostController, nickname: String) {
+    println("nickn: ${nickname}")
     NavHost(
         navController = navController,
-        startDestination = Routes.Login.route,
+        startDestination = Routes.Start.route,
         modifier = Modifier.fillMaxSize()
     ) {
+        composable(route = Routes.Start.route) {
+            if(nickname != "") {
+                DashboardScreen(nickname = nickname)
+            }
+            else {
+                LoginScreen()
+            }
+        }
         composable(route= Routes.Login.route) {
             LoginScreen(
                 goToDashboard = {
@@ -43,9 +52,9 @@ fun Navigation(navController: NavHostController) {
             )
         }
         composable(
-            route= Routes.Dashboard.route + "/{email}",
+            route = Routes.Dashboard.route + "/{nickname}",
             arguments = listOf(
-                navArgument("email"){
+                navArgument("nickname"){
                     type = NavType.StringType
                     nullable = true
                 }
@@ -53,7 +62,7 @@ fun Navigation(navController: NavHostController) {
 
         ){
             entry ->
-            entry.arguments?.getString("email")?.let { DashboardScreen(email = it) }
+            entry.arguments?.getString("nickname")?.let { DashboardScreen(nickname = it) }
         }
 
         composable(route= Routes.Camera.route) {
@@ -76,8 +85,9 @@ sealed class Routes(val route: String) {
     object SignUp : Routes( "signup")
     object Camera : Routes("camera")
     object Settings: Routes("settings")
+    object Start: Routes("start")
 
-    fun passArgs(vararg args: String) : String{
+    fun passArgs(vararg args: String) : String {
         return buildString {
             append(route)
             args.forEach { arg ->

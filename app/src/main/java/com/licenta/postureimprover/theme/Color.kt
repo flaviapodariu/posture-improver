@@ -15,3 +15,5 @@ val Green80 = Color(0xFF78A191)
 val Brown80 = Color(0xFF7A7275)
 
 val Orange50 = Color(0xFFFF6D00)
+
+val Grey700 = Color(0xFF5F6368)

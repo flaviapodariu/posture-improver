@@ -41,9 +41,9 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                     if (bodyLandmarks.isNotEmpty()) {
                         returnLandmarks(bodyLandmarks)
 //                        Timber.tag("landmarkType").d(landmarksToString(bodyLandmarks))
-
                         runBlocking {
-                              checkPosture(bodyLandmarks)
+                             val sendPosture =  checkPosture(bodyLandmarks)
+
                         }
                         imageProxy.close()
                     } else {

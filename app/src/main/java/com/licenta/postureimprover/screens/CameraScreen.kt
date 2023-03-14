@@ -37,6 +37,7 @@ import timber.log.Timber
 @ExperimentalPermissionsApi
 @Composable
 fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
+
     val permissions = rememberPermissionState(
         permission = android.Manifest.permission.CAMERA,
     )
@@ -143,9 +144,6 @@ fun CameraView(
     }
 
 }
-
-
-
 
 
 

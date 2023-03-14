@@ -34,8 +34,10 @@ fun LoginScreen(
     LaunchedEffect(key1 = authViewModel.authState, key2 = context) {
         authViewModel.authState?.let {
             when(it) {
-                is AuthResponse.Success ->
+                is AuthResponse.Success -> {
+                    authViewModel.onSuccesfulAuth(it.result.token)
                     goToDashboard(it.result.nickname)
+                }
                 is AuthResponse.Failure ->
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
                 else -> Unit
@@ -102,8 +104,10 @@ fun SignUpScreen(
     LaunchedEffect(key1 = authViewModel.authState, key2 = context) {
         authViewModel.authState?.let {
             when(it) {
-                is AuthResponse.Success ->
+                is AuthResponse.Success -> {
+                    authViewModel.onSuccesfulAuth(it.result.token)
                     goToDashboard(it.result.nickname)
+                }
                 is AuthResponse.Failure ->
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
                 else -> Unit

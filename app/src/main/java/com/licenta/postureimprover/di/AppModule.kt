@@ -1,22 +1,17 @@
 package com.licenta.postureimprover.di
 
 import android.app.Application
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraSelector.LENS_FACING_FRONT
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
-import com.google.api.Http
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import com.licenta.postureimprover.data.api.AuthenticationService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
@@ -30,14 +25,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
-    @Provides
-    @Singleton
-    fun provideAuth(): FirebaseAuth = Firebase.auth
-
-    @Provides
-    @Singleton
-    fun provideDatabase() : FirebaseFirestore = Firebase.firestore
 
 //    CAMERA PREVIEW
     @Provides
@@ -69,12 +56,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthService(client: HttpClient, preferences: SharedPreferences) : AuthenticationService {
-        return AuthenticationService(client, preferences)
-    }
-
-    @Provides
-    @Singleton
     fun provideHttpClient() : HttpClient {
         return HttpClient(Android) {
             install(Logging) {
@@ -88,11 +69,6 @@ object AppModule {
                 json()
             }
         }
-    }
-    @Provides
-    @Singleton
-    fun providePreferences(app: Application) : SharedPreferences {
-        return app.getSharedPreferences("preferences", MODE_PRIVATE)
     }
 
 }
