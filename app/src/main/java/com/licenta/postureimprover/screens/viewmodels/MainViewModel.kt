@@ -34,11 +34,17 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            nickname = client.get {
-                url(ApiRoutes.BASE_URL)
-                bearerAuth(token)
-            }.body()
-            isLoading = false
+            try {
+                nickname = client.get {
+                    url(ApiRoutes.BASE_URL)
+                    bearerAuth(token)
+                }.body()
+                isLoading = false
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+
         }
     }
 

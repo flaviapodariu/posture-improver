@@ -7,7 +7,11 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.licenta.postureimprover.domain.FrameAnalyzer
 import dagger.hilt.android.lifecycle.HiltViewModel

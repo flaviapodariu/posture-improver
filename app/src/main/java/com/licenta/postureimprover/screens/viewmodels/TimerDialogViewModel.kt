@@ -36,7 +36,7 @@ class TimerDialogViewModel @Inject constructor(
     }
 
     fun saveInstructionsPrefs() {
-        var p = prefs.edit().putBoolean("camera instructions", !isChecked).apply()
+        val p = prefs.edit().putBoolean("camera instructions", !isChecked).apply()
         println(p)
     }
 
@@ -57,6 +57,7 @@ class TimerDialogViewModel @Inject constructor(
         showDialog3 = true
         dialogText = dialog3Text
         onBackPressed = { onBackDialog3() }
+        onNextPressed = { onNextDialog3() }
     }
 
     private fun onBackDialog2() {
@@ -64,12 +65,22 @@ class TimerDialogViewModel @Inject constructor(
         showDialog1 = true
         dialogText = dialog1Text
         onNextPressed = { onNextDialog1() }
+        onBackPressed = { onBackDialog2() } // there is no back on d1
     }
 
     private fun onBackDialog3() {
         showDialog3 = false
         showDialog2 = true
         dialogText = dialog2Text
+        onBackPressed = { onBackDialog2() }
+        onNextPressed = { onNextDialog2() }
+    }
+
+    private fun onNextDialog3() {
+        showDialog3 = false
+        showDialog1 = true
+        dialogText = dialog1Text
+        onNextPressed = { onNextDialog1() }
         onBackPressed = { onBackDialog2() }
     }
 

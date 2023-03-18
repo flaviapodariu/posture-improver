@@ -21,12 +21,16 @@ fun FullTimerDialog(
     goToCameraScreen: () -> Unit,
     dialogStillShowing: (Boolean) -> Unit
 ) {
-    if(timerDialogViewModel.getInstructionPrefs())
+    println(timerDialogViewModel.getInstructionPrefs())
+    if(timerDialogViewModel.getInstructionPrefs()) {
         TimerDialogItem(
             goToCameraScreen= goToCameraScreen,
             dialogStillShowing = dialogStillShowing
         )
-    else goToCameraScreen()
+    }
+    else {
+        goToCameraScreen()
+    }
 }
 
 @Composable
@@ -104,12 +108,12 @@ fun TimerDialogItem(
                         .fillMaxWidth()
                         .padding(start = 10.dp)
                 ) {
-                    if (!timerDialogViewModel.showDialog1) {
-                        Button(onClick = { timerDialogViewModel.onBackPressed() }) {
-                            Text(text = "Back")
-                        }
+                    val buttonText =  if(timerDialogViewModel.showDialog1) "Exit" else "Back"
 
+                    Button(onClick = { timerDialogViewModel.onBackPressed() }) {
+                        Text(text = buttonText)
                     }
+
                     Row(
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.Bottom,
@@ -122,7 +126,8 @@ fun TimerDialogItem(
                                 timerDialogViewModel.saveInstructionsPrefs()
                                 dialogStillShowing(false)
                                 goToCameraScreen()
-                            } else timerDialogViewModel.onNextPressed()
+                            }
+                            timerDialogViewModel.onNextPressed()
                         }) {
                             Text(
                                 text = if (timerDialogViewModel.showDialog3) "Open Camera" else "Next")

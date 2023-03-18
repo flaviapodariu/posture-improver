@@ -41,7 +41,7 @@ fun StandardScaffold(
 
     if(showTimerInfo) {
         FullTimerDialog(
-            goToCameraScreen = {navController.navigate(Routes.Camera.route)},
+            goToCameraScreen = { navController.navigate(Routes.Camera.route) },
             dialogStillShowing = { stillShowing -> showTimerInfo = stillShowing }
         )
     }

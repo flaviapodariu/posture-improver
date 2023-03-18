@@ -2,6 +2,8 @@ package com.licenta.postureimprover.screens
 
 
 import android.content.Context
+import android.os.CountDownTimer
+import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -43,7 +45,7 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
     )
 
     val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(key1 = lifecycleOwner, effect ={
+    DisposableEffect(key1 = lifecycleOwner, effect = {
         val observer = LifecycleEventObserver { _, event ->
             if(event == Lifecycle.Event.ON_RESUME){
                 permissions.launchPermissionRequest()
@@ -57,6 +59,7 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
     } )
 
     var landmarks: List<PoseLandmark>? = null
+
     if(permissions.status.isGranted){
         val context = LocalContext.current
         Box(modifier = Modifier.fillMaxSize()){
@@ -119,7 +122,6 @@ fun CameraView(
 //    only recompose if selector is changed (from back to front facing camera)
     LaunchedEffect(key1 = selector , block ={
         try{
-
             provider.unbindAll()
             provider.bindToLifecycle(
                 lifecycleOwner,
@@ -141,6 +143,7 @@ fun CameraView(
             factory = { previewView },
             modifier = Modifier.fillMaxSize()
         )
+
     }
 
 }
