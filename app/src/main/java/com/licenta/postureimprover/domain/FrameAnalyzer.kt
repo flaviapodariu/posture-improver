@@ -9,6 +9,8 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
+import com.licenta.postureimprover.data.api.services.CaptureService
+import com.licenta.postureimprover.domain.models.PostureCapture
 import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import javax.inject.Inject
@@ -16,13 +18,13 @@ import javax.inject.Inject
 
 class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
 
-
     private val options = AccuratePoseDetectorOptions.Builder()
         .setDetectorMode(AccuratePoseDetectorOptions.STREAM_MODE)
         .build()
 
     lateinit var context: Context
     lateinit var returnLandmarks: (List<PoseLandmark>) -> Unit
+    lateinit var returnPostureCapture: (PostureCapture) -> Unit
 
 
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
@@ -42,8 +44,8 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                         returnLandmarks(bodyLandmarks)
 //                        Timber.tag("landmarkType").d(landmarksToString(bodyLandmarks))
                         runBlocking {
-                             val sendPosture =  checkPosture(bodyLandmarks)
-
+                             val capture =  checkPosture(bodyLandmarks)
+                            returnPostureCapture(capture)
                         }
                         imageProxy.close()
                     } else {

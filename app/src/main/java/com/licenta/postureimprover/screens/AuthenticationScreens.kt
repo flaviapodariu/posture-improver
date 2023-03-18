@@ -35,11 +35,13 @@ fun LoginScreen(
         authViewModel.authState?.let {
             when(it) {
                 is AuthResponse.Success -> {
-                    authViewModel.onSuccesfulAuth(it.result.token)
+                    authViewModel.onSuccesfulAuth(it.result.token, it.result.nickname)
                     goToDashboard(it.result.nickname)
                 }
-                is AuthResponse.Failure ->
+                is AuthResponse.Failure -> {
+                    println(it.exception.message)
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+                }
                 else -> Unit
             }
         }
@@ -68,7 +70,7 @@ fun LoginScreen(
         
 //     temp solution
         Button(
-            onClick = { goToDashboard("test") },
+            onClick = { goToDashboard("anonymous") },
             content = { Text("Log in as visitor")}
         )
 
@@ -105,7 +107,7 @@ fun SignUpScreen(
         authViewModel.authState?.let {
             when(it) {
                 is AuthResponse.Success -> {
-                    authViewModel.onSuccesfulAuth(it.result.token)
+                    authViewModel.onSuccesfulAuth(it.result.token, it.result.nickname)
                     goToDashboard(it.result.nickname)
                 }
                 is AuthResponse.Failure ->

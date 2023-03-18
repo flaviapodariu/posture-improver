@@ -44,8 +44,9 @@ class AuthenticationViewModel @Inject constructor(
         confirmPassword = confirmPassState
     }
 
-    fun onSuccesfulAuth(token: String) {
+    fun onSuccesfulAuth(token: String, nickname: String) {
         prefs.edit().putString("jwt", token).apply()
+        prefs.edit().putString("nickname", nickname).apply()
 
 
     }

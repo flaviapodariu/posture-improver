@@ -1,18 +1,17 @@
 package com.licenta.postureimprover.screens.viewmodels
 
-import android.app.Application
 import android.content.SharedPreferences
-import androidx.activity.ComponentActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.licenta.postureimprover.data.api.ApiRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
+import io.ktor.client.network.sockets.*
+import io.ktor.client.plugins.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import kotlinx.coroutines.launch
@@ -38,10 +37,20 @@ class MainViewModel @Inject constructor(
                 nickname = client.get {
                     url(ApiRoutes.BASE_URL)
                     bearerAuth(token)
+                    timeout {
+                        requestTimeoutMillis = 2000
+                    }
                 }.body()
                 isLoading = false
             }
-            catch (e: Exception) {
+            catch (e: SocketTimeoutException) {
+                // rely on room db until server is online
+                isLoading = false
+            }
+            catch(e: HttpRequestTimeoutException) {
+                isLoading = false
+            }
+            catch(e: Exception) {
                 e.printStackTrace()
             }
 

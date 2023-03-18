@@ -15,7 +15,6 @@ import com.licenta.postureimprover.screens.*
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Navigation(navController: NavHostController, nickname: String) {
-    println("nickn: ${nickname}")
     NavHost(
         navController = navController,
         startDestination = Routes.Start.route,

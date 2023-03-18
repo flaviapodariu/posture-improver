@@ -1,9 +1,6 @@
 package com.licenta.postureimprover.di
 
 import android.app.Application
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
-import android.content.SharedPreferences
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraSelector.LENS_FACING_FRONT
 import androidx.camera.core.Preview
@@ -11,10 +8,10 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.*
 import io.ktor.client.engine.android.*
+import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.serialization.kotlinx.json.*
@@ -68,6 +65,7 @@ object AppModule {
             install(ContentNegotiation) {
                 json()
             }
+            install(HttpTimeout)
         }
     }
 

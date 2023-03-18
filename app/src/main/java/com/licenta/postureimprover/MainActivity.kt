@@ -1,5 +1,6 @@
 package com.licenta.postureimprover
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -46,7 +47,8 @@ class MainActivity : ComponentActivity() {
                             Routes.Camera.route,
                             Routes.Login.route,
                             Routes.SignUp.route
-                        )
+                        ),
+                        prefs = this.getSharedPreferences("preferences", MODE_PRIVATE)
 
                     ){
                         Navigation(navController = navController, nickname = mainViewModel.nickname)

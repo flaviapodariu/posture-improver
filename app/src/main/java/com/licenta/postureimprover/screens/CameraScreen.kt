@@ -10,8 +10,7 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -32,8 +31,12 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
+import com.licenta.postureimprover.domain.models.PostureCapture
+import com.licenta.postureimprover.screens.components.CameraTimer
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
 import com.licenta.postureimprover.theme.Orange50
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
 @ExperimentalPermissionsApi
@@ -59,6 +62,7 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
     } )
 
     var landmarks: List<PoseLandmark>? = null
+    var capture: PostureCapture? = null
 
     if(permissions.status.isGranted){
         val context = LocalContext.current
@@ -68,12 +72,25 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
                 cameraViewModel.provider,
                 cameraViewModel.selector,
                 cameraViewModel.preview,
-                cameraViewModel.getImageAnalysis(context, getLandmarks = { list ->  landmarks = list}),
+                cameraViewModel.getImageAnalysis(
+                    context,
+                    getLandmarks = { list ->  landmarks = list},
+                    getPostureCapture = { postureCapture -> capture = postureCapture }
+                ),
                 context,
                 LocalLifecycleOwner.current,
             )
 
-
+            runBlocking {
+                delay(100)
+            }
+        if(cameraViewModel.timerRuns) {
+            CameraTimer(isTimerRunning = { runs -> cameraViewModel.timerRuns = runs })
+        }
+        else {
+            // PLEASE COME BACK AT THIS !!
+            cameraViewModel.sendPosture(capture)
+        }
 
             Canvas(modifier = Modifier.fillMaxSize()) {
                 landmarks?.let {

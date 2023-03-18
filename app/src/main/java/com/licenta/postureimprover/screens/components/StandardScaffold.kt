@@ -1,5 +1,6 @@
 package com.licenta.postureimprover.screens.components
 
+import android.content.SharedPreferences
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
@@ -11,14 +12,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.licenta.postureimprover.screens.navigation.Routes
 import com.licenta.postureimprover.screens.viewmodels.TimerDialogViewModel
+import javax.inject.Inject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StandardScaffold(
     navController: NavHostController,
+    prefs: SharedPreferences,
     icons: List<BottomNavIcon> = listOf(
         BottomNavIcon(
-            route = Routes.Dashboard.passArgs("anonymous for now"),
+            route = Routes.Dashboard.passArgs(prefs.getString("nickname", "")!!),
             icon = Icons.Rounded.Home,
             description = "Home"
         ),
