@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +29,7 @@ fun FullTimerDialog(
     }
     else {
         goToCameraScreen()
+        dialogStillShowing(false)
     }
 }
 
@@ -42,7 +42,8 @@ fun TimerDialogItem(
 
     Dialog(onDismissRequest = {}) {
         Card(
-            shape = RoundedCornerShape(15.dp), modifier = Modifier
+            shape = RoundedCornerShape(15.dp),
+            modifier = Modifier
                 .fillMaxSize()
                 .wrapContentHeight()
         ) {
@@ -106,7 +107,7 @@ fun TimerDialogItem(
                     verticalAlignment = Alignment.Bottom,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 10.dp)
+                        .padding(start = 10.dp, bottom = 5.dp)
                 ) {
                     val buttonText =  if(timerDialogViewModel.showDialog1) "Exit" else "Back"
 
@@ -119,7 +120,7 @@ fun TimerDialogItem(
                         verticalAlignment = Alignment.Bottom,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(end = 10.dp)
+                            .padding(end = 10.dp, bottom = 5.dp)
                     ) {
                         Button(onClick = {
                             if (timerDialogViewModel.showDialog3) {

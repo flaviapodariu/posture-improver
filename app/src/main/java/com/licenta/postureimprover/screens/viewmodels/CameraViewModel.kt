@@ -12,13 +12,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
+import com.licenta.postureimprover.data.api.dto.WorkoutRes
 import com.licenta.postureimprover.data.api.services.CaptureService
-import com.licenta.postureimprover.domain.FrameAnalyzer
-import com.licenta.postureimprover.domain.models.PostureCapture
+import com.licenta.postureimprover.data.util.Task
+import com.licenta.postureimprover.util.FrameAnalyzer
+import com.licenta.postureimprover.data.models.PostureCapture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
@@ -31,24 +30,27 @@ class CameraViewModel @Inject constructor(
     var preview: Preview,
     var analyzer: FrameAnalyzer,
     var executor: ExecutorService,
-    private var captureService: CaptureService
+    var captureService: CaptureService
 ): ViewModel() {
 
     var timerRuns: Boolean by mutableStateOf(true)
+    var captureSent: Boolean by mutableStateOf(false)
+    var isErrorDialogShowing: Boolean by mutableStateOf(false)
+
     fun changeSelector(cameraSelector: CameraSelector){
         selector = cameraSelector
     }
 
-    fun sendPosture(capture: PostureCapture?) {
+    fun sendPosture(capture: PostureCapture) : Task<WorkoutRes>? {
+        var workout: Task<WorkoutRes>? = null
         viewModelScope.launch {
-            if (capture != null) {
-                captureService.sendCapture(capture)
+            captureService.sendCapture(capture)?.let {
+                workout = it
             }
-            else{
-                println("nahhh")
-            }
-
+            println("$capture somecapture please")
         }
+        captureSent = true
+        return workout
     }
 
     fun getImageAnalysis(

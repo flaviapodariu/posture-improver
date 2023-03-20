@@ -1,7 +1,6 @@
 package com.licenta.postureimprover.screens
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -10,13 +9,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.licenta.postureimprover.data.api.dto.CaptureRes
-import com.licenta.postureimprover.data.util.AuthResponse
-import com.licenta.postureimprover.domain.models.PostureCapture
+import com.licenta.postureimprover.data.util.Task
+import com.licenta.postureimprover.screens.components.ErrorDialog
 import com.licenta.postureimprover.screens.viewmodels.DashboardViewModel
 
 @Composable
 fun DashboardScreen(
-    nickname:String,
+    nickname: String,
     dashboardViewModel: DashboardViewModel = hiltViewModel()
     ) {
 
@@ -24,7 +23,7 @@ fun DashboardScreen(
     LaunchedEffect(key1 = dashboardViewModel.userHistoryState , key2= context) {
         dashboardViewModel.userHistoryState?.let {
             when(it) {
-                is AuthResponse.Success -> {
+                is Task.Success -> {
                     dashboardViewModel.onUserCaptureChange(it.result.captures)
                 }
                 else -> Unit
@@ -49,7 +48,8 @@ fun DashboardScreen(
         }
         else {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(vertical = 15.dp)
             ) {
                 Text(text = "Nothing here yet!")

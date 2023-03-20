@@ -1,9 +1,8 @@
-package com.licenta.postureimprover.domain
+package com.licenta.postureimprover.util
 
 import android.graphics.PointF
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.licenta.postureimprover.domain.models.PostureCapture
-import timber.log.Timber
+import com.licenta.postureimprover.data.models.PostureCapture
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.pow
@@ -40,7 +39,7 @@ import kotlin.math.pow
       //translate points by -b (b in the vertex of the angle)
         val atanC = atan2(-c.y + b.y, c.x - b.x)
         val atanA = atan2(-a.y + b.y, a.x - b.x)
-        Timber.tag("atans").d("${radiansToDegrees(atanC)}, ${radiansToDegrees(atanA)}")
+//        Timber.tag("atans").d("${radiansToDegrees(atanC)}, ${radiansToDegrees(atanA)}")
         return radiansToDegrees( atanC - atanA)
     }
 
@@ -53,7 +52,7 @@ import kotlin.math.pow
  */
     fun lordosis(shoulders: PointF, torso: PointF, knees: PointF): Float {
         val angle = angle(shoulders, torso, knees)
-        Timber.tag("lordosis").i("$angle")
+//        Timber.tag("lordosis").i("$angle")
         return angle
     }
 
@@ -63,7 +62,7 @@ import kotlin.math.pow
         if(degrees > 180){
             degrees = 360 - degrees
         }
-        Timber.tag("head").d("$degrees")
+//        Timber.tag("head").d("$degrees")
         return degrees
     }
 
@@ -81,9 +80,6 @@ import kotlin.math.pow
     }
 
 fun checkPosture(body: List<PoseLandmark>): PostureCapture {
-
-//        if(lordosis(body[12].position, body[24].position, body[26].position))
-//            problems += 1
     val nose = body[0].position
     val ears = mean(body[7].position, body[8].position)
     val shoulders = mean(body[11].position, body[12].position)

@@ -11,6 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.licenta.postureimprover.screens.*
+import com.licenta.postureimprover.screens.components.StandardScaffold
+import okhttp3.Route
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -22,10 +24,10 @@ fun Navigation(navController: NavHostController, nickname: String) {
     ) {
         composable(route = Routes.Start.route) {
             if(nickname != "") {
-                DashboardScreen(nickname = nickname)
+                navController.navigate(Routes.Dashboard.passArgs(nickname))
             }
             else {
-                LoginScreen()
+                navController.navigate(Routes.Login.route)
             }
         }
         composable(route= Routes.Login.route) {
@@ -65,7 +67,12 @@ fun Navigation(navController: NavHostController, nickname: String) {
         }
 
         composable(route= Routes.Camera.route) {
-            CameraScreen()
+            CameraScreen(
+                reopenCamera = {
+                    navController.popBackStack()
+                    navController.navigate(Routes.Camera.route)
+                }
+            )
         }
 
         composable(route= Routes.Settings.route) {

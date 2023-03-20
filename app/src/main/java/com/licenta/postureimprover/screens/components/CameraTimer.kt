@@ -13,14 +13,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.licenta.postureimprover.domain.models.PostureCapture
+import com.licenta.postureimprover.data.models.PostureCapture
 import kotlinx.coroutines.delay
 
 @Composable
 fun CameraTimer(isTimerRunning: (Boolean) -> Unit) {
-    var secondsLeft: Int by remember { mutableStateOf(5) }
+    var secondsLeft: Int by remember { mutableStateOf(2) }
     
     LaunchedEffect(key1 = secondsLeft) {
+
         if(secondsLeft > 0) {
             delay(1000)
             secondsLeft -= 1

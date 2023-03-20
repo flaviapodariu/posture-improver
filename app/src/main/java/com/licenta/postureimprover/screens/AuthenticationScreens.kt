@@ -10,18 +10,16 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.licenta.postureimprover.data.util.AuthResponse
+import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.screens.components.ProtectedTextInput
 import com.licenta.postureimprover.screens.components.VisibleTextInput
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
-import com.licenta.postureimprover.ui.styles.authChangeOptionButtonStyle
-import kotlinx.coroutines.launch
+import com.licenta.postureimprover.theme.authChangeOptionButtonStyle
 
 @Composable
 fun LoginScreen(
@@ -34,11 +32,11 @@ fun LoginScreen(
     LaunchedEffect(key1 = authViewModel.authState, key2 = context) {
         authViewModel.authState?.let {
             when(it) {
-                is AuthResponse.Success -> {
+                is Task.Success -> {
                     authViewModel.onSuccesfulAuth(it.result.token, it.result.nickname)
                     goToDashboard(it.result.nickname)
                 }
-                is AuthResponse.Failure -> {
+                is Task.Failure -> {
                     println(it.exception.message)
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
                 }
@@ -106,11 +104,11 @@ fun SignUpScreen(
     LaunchedEffect(key1 = authViewModel.authState, key2 = context) {
         authViewModel.authState?.let {
             when(it) {
-                is AuthResponse.Success -> {
+                is Task.Success -> {
                     authViewModel.onSuccesfulAuth(it.result.token, it.result.nickname)
                     goToDashboard(it.result.nickname)
                 }
-                is AuthResponse.Failure ->
+                is Task.Failure ->
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
                 else -> Unit
             }

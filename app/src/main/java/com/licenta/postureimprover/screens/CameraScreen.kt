@@ -3,6 +3,7 @@ package com.licenta.postureimprover.screens
 
 import android.content.Context
 import android.os.CountDownTimer
+import android.provider.Settings.Global
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -31,17 +32,22 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.licenta.postureimprover.domain.models.PostureCapture
+import com.licenta.postureimprover.data.util.Task
+import com.licenta.postureimprover.data.models.PostureCapture
 import com.licenta.postureimprover.screens.components.CameraTimer
+import com.licenta.postureimprover.screens.components.ErrorDialog
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
 import com.licenta.postureimprover.theme.Orange50
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import timber.log.Timber
 
+@OptIn(DelicateCoroutinesApi::class)
 @ExperimentalPermissionsApi
 @Composable
-fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
+fun CameraScreen(
+    reopenCamera: () -> Unit,
+    cameraViewModel: CameraViewModel = hiltViewModel()
+) {
 
     val permissions = rememberPermissionState(
         permission = android.Manifest.permission.CAMERA,
@@ -74,8 +80,9 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
                 cameraViewModel.preview,
                 cameraViewModel.getImageAnalysis(
                     context,
-                    getLandmarks = { list ->  landmarks = list},
+                    getLandmarks = { list ->  landmarks = list },
                     getPostureCapture = { postureCapture -> capture = postureCapture }
+
                 ),
                 context,
                 LocalLifecycleOwner.current,
@@ -88,8 +95,29 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
             CameraTimer(isTimerRunning = { runs -> cameraViewModel.timerRuns = runs })
         }
         else {
-            // PLEASE COME BACK AT THIS !!
-            cameraViewModel.sendPosture(capture)
+            LaunchedEffect(key1 = capture) {
+                capture?.let {
+                    Timber.tag("capturez").d("${it.lordosis}, ${it.headForward},  ${it.roundedShoulders}")
+
+                    cameraViewModel.sendPosture(it)?.let { res ->
+                        when(res) {
+                            is Task.Success -> {
+                                cameraViewModel.isErrorDialogShowing = false
+                            }
+
+                            is Task.Failure -> {
+
+                                cameraViewModel.isErrorDialogShowing = true
+                            }
+
+                            else -> Unit
+                        }
+                    }
+                    cameraViewModel.isErrorDialogShowing = true
+
+                }
+            }
+
         }
 
             Canvas(modifier = Modifier.fillMaxSize()) {
@@ -115,7 +143,12 @@ fun CameraScreen(cameraViewModel: CameraViewModel = hiltViewModel()) {
             }
         }
 
+        if(cameraViewModel.isErrorDialogShowing) {
+            ErrorDialog(reopenCamera= reopenCamera)
+        }
     }
+
+
 
 }
 

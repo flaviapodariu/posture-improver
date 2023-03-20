@@ -10,7 +10,7 @@ import com.licenta.postureimprover.data.api.dto.AuthRes
 import com.licenta.postureimprover.data.api.dto.LoginReq
 import com.licenta.postureimprover.data.api.dto.RegisterReq
 import com.licenta.postureimprover.data.api.services.AuthService
-import com.licenta.postureimprover.data.util.AuthResponse
+import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class AuthenticationViewModel @Inject constructor(
     var password: String by mutableStateOf("")
     var confirmPassword: String by mutableStateOf("")
 
-    var authState: AuthResponse<AuthRes>? by mutableStateOf(null)
+    var authState: Task<AuthRes>? by mutableStateOf(null)
 
     fun onEmailChanged(emailState: String) {
         email = emailState

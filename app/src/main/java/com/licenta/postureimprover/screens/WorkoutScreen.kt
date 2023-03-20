@@ -22,7 +22,7 @@ fun WorkoutScreen() {
     Row(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Column() {
+        Column {
             Text(
                 text = "Workouts",
                 modifier = Modifier
@@ -37,7 +37,8 @@ fun WorkoutScreen() {
             
             Canvas(modifier = Modifier
                 .fillMaxSize()
-                .height(20.dp)){
+                .height(20.dp)
+            ) {
                 val h = size.height
                 val w = size.width
 

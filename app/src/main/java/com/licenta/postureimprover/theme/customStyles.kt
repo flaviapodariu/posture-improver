@@ -1,9 +1,8 @@
-package com.licenta.postureimprover.ui.styles
+package com.licenta.postureimprover.theme
 
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.em
-import com.licenta.postureimprover.theme.Green80
 
 fun authChangeOptionButtonStyle(): TextStyle {
     return TextStyle(

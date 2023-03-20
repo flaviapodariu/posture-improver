@@ -1,4 +1,4 @@
-package com.licenta.postureimprover.domain
+package com.licenta.postureimprover.util
 
 val parts = listOf(
     "leftShoulder",

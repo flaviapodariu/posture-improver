@@ -1,4 +1,4 @@
-package com.licenta.postureimprover.domain.models
+package com.licenta.postureimprover.data.models
 import kotlinx.serialization.Serializable
 
 @Serializable
