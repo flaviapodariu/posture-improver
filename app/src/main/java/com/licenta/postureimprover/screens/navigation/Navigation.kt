@@ -17,6 +17,9 @@ import okhttp3.Route
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Navigation(navController: NavHostController, nickname: String) {
+
+    println("y nickname is $nickname")
+
     NavHost(
         navController = navController,
         startDestination = Routes.Start.route,
@@ -24,9 +27,11 @@ fun Navigation(navController: NavHostController, nickname: String) {
     ) {
         composable(route = Routes.Start.route) {
             if(nickname != "") {
+                navController.popBackStack()
                 navController.navigate(Routes.Dashboard.passArgs(nickname))
             }
             else {
+                navController.popBackStack()
                 navController.navigate(Routes.Login.route)
             }
         }
@@ -45,7 +50,7 @@ fun Navigation(navController: NavHostController, nickname: String) {
             SignUpScreen(
                 goToDashboard = {
                     navController.navigate(Routes.Dashboard.passArgs(it))
-            },
+                },
                 goToLogin = {
                     navController.popBackStack()
                     navController.navigate(Routes.Login.route)

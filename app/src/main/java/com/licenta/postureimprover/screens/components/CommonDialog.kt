@@ -11,8 +11,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
-fun ErrorDialog(
-    reopenCamera: () -> Unit
+fun CommonDialog(
+    onClickAction: () -> Unit,
+    dialogHeading: String,
+    dialogText: String,
+    buttonText: String
 ) {
     Dialog(onDismissRequest = { }) {
         Card(
@@ -34,7 +37,7 @@ fun ErrorDialog(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        text = "Could not capture posture",
+                        text = dialogHeading,
                         fontWeight = FontWeight.Bold,
                         style = MaterialTheme.typography.titleMedium
                     )
@@ -50,7 +53,7 @@ fun ErrorDialog(
                         .padding(horizontal = 10.dp, vertical = 5.dp),
                 ) {
                     Text(
-                        text = "Something went wrong! Please try again!",
+                        text = dialogText,
                         style = MaterialTheme.typography.bodyMedium,
                         softWrap = true
                     )
@@ -64,9 +67,9 @@ fun ErrorDialog(
                         .padding(end = 10.dp, bottom = 5.dp)
                 ) {
                     Button(
-                        onClick = { reopenCamera() }
+                        onClick = { onClickAction() }
                     ) {
-                        Text(text = "Retry")
+                        Text(text = buttonText)
                     }
                 }
             }

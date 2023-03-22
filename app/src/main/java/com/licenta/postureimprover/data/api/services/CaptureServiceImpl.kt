@@ -1,10 +1,10 @@
 package com.licenta.postureimprover.data.api.services
 
 import com.licenta.postureimprover.data.api.ApiRoutes
-import com.licenta.postureimprover.data.api.dto.PostureHistory
-import com.licenta.postureimprover.data.api.dto.WorkoutRes
+import com.licenta.postureimprover.data.api.dto.response.PostureHistory
+import com.licenta.postureimprover.data.api.dto.response.WorkoutRes
 import com.licenta.postureimprover.data.util.Task
-import com.licenta.postureimprover.data.models.PostureCapture
+import com.licenta.postureimprover.data.models.Capture
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -30,7 +30,7 @@ class CaptureServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun sendCapture(capture: PostureCapture): Task<WorkoutRes>? {
+    override suspend fun sendCapture(capture: Capture): Task<WorkoutRes>? {
         return try {
            val res: WorkoutRes = client.post {
             url(ApiRoutes.DASHBOARD)

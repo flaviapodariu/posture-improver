@@ -1,14 +1,15 @@
 package com.licenta.postureimprover.screens.viewmodels
 
 import android.content.SharedPreferences
+import android.provider.ContactsContract.CommonDataKinds.Nickname
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.licenta.postureimprover.data.api.dto.AuthRes
-import com.licenta.postureimprover.data.api.dto.LoginReq
-import com.licenta.postureimprover.data.api.dto.RegisterReq
+import com.licenta.postureimprover.data.api.dto.request.LoginReq
+import com.licenta.postureimprover.data.api.dto.request.RegisterReq
+import com.licenta.postureimprover.data.api.dto.response.AuthRes
 import com.licenta.postureimprover.data.api.services.AuthService
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,10 +24,13 @@ class AuthenticationViewModel @Inject constructor(
 {
     var email: String by mutableStateOf("")
     var nickname: String by mutableStateOf("")
+    var visitorNickname: String by mutableStateOf("")
     var password: String by mutableStateOf("")
     var confirmPassword: String by mutableStateOf("")
 
     var authState: Task<AuthRes>? by mutableStateOf(null)
+
+    var showVisitorDialog: Boolean by mutableStateOf(false)
 
     fun onEmailChanged(emailState: String) {
         email = emailState
@@ -34,6 +38,10 @@ class AuthenticationViewModel @Inject constructor(
 
     fun onNicknameChanged(nicknameState: String) {
         nickname = nicknameState
+    }
+
+    fun onVisitorNicknameChanged(visitorNicknameState: String) {
+        visitorNickname = visitorNicknameState
     }
 
     fun onPasswordChanged(passwordState: String) {
@@ -47,8 +55,6 @@ class AuthenticationViewModel @Inject constructor(
     fun onSuccesfulAuth(token: String, nickname: String) {
         prefs.edit().putString("jwt", token).apply()
         prefs.edit().putString("nickname", nickname).apply()
-
-
     }
 
     fun login() {
@@ -74,5 +80,16 @@ class AuthenticationViewModel @Inject constructor(
 
         }
     }
+
+    fun loadVisitorDialog() {
+        showVisitorDialog = true
+    }
+
+    fun createVisitorAccount() {
+        prefs.edit().putBoolean("isVisitor", true).apply()
+        prefs.edit().putString("nickname", visitorNickname).apply()
+        showVisitorDialog = false
+    }
+
 
 }

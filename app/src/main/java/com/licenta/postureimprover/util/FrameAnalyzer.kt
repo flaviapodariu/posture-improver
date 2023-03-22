@@ -9,7 +9,7 @@ import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
-import com.licenta.postureimprover.data.models.PostureCapture
+import com.licenta.postureimprover.data.models.Capture
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
 
     lateinit var context: Context
     lateinit var returnLandmarks: (List<PoseLandmark>) -> Unit
-    lateinit var returnPostureCapture: (PostureCapture) -> Unit
+    lateinit var returnPostureCapture: (Capture) -> Unit
 
 
     @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
@@ -46,6 +46,7 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                         imageProxy.close()
                     } else {
                         Toast.makeText(
+
                             context,
                             "Person is not inside capture screen!",
                             Toast.LENGTH_SHORT

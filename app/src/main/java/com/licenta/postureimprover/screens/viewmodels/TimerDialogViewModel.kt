@@ -44,7 +44,6 @@ class TimerDialogViewModel @Inject constructor(
         //if not found returns true
         return prefs.getBoolean("camera instructions", true)
     }
-
     private fun onNextDialog1() {
         showDialog1 = false
         showDialog2 = true

@@ -2,9 +2,6 @@ package com.licenta.postureimprover.screens
 
 
 import android.content.Context
-import android.os.CountDownTimer
-import android.provider.Settings.Global
-import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
@@ -32,10 +29,10 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
+import com.licenta.postureimprover.data.models.Capture
 import com.licenta.postureimprover.data.util.Task
-import com.licenta.postureimprover.data.models.PostureCapture
 import com.licenta.postureimprover.screens.components.CameraTimer
-import com.licenta.postureimprover.screens.components.ErrorDialog
+import com.licenta.postureimprover.screens.components.CommonDialog
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
 import com.licenta.postureimprover.theme.Orange50
 import kotlinx.coroutines.*
@@ -68,7 +65,7 @@ fun CameraScreen(
     } )
 
     var landmarks: List<PoseLandmark>? = null
-    var capture: PostureCapture? = null
+    var capture: Capture? = null
 
     if(permissions.status.isGranted){
         val context = LocalContext.current
@@ -144,7 +141,12 @@ fun CameraScreen(
         }
 
         if(cameraViewModel.isErrorDialogShowing) {
-            ErrorDialog(reopenCamera= reopenCamera)
+            CommonDialog(
+                onClickAction= reopenCamera,
+                dialogHeading = "Could not capture posture",
+                dialogText = "Something went wrong! Please try again!",
+                buttonText = "Retry"
+            )
         }
     }
 

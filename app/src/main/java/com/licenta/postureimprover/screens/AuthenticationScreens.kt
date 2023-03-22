@@ -13,11 +13,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.licenta.postureimprover.R
 import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.screens.components.ProtectedTextInput
 import com.licenta.postureimprover.screens.components.VisibleTextInput
+import com.licenta.postureimprover.screens.components.VisitorDialog
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
 import com.licenta.postureimprover.theme.authChangeOptionButtonStyle
 
@@ -68,11 +71,29 @@ fun LoginScreen(
         
 //     temp solution
         Button(
-            onClick = { goToDashboard("anonymous") },
+            onClick = {
+                authViewModel.loadVisitorDialog()
+            },
             content = { Text("Log in as visitor")}
         )
 
     }
+    
+    if(authViewModel.showVisitorDialog) {
+        VisitorDialog(
+            onClickAction = {
+                authViewModel.createVisitorAccount()
+                goToDashboard(authViewModel.visitorNickname)
+            },
+            dialogHeading = "Visitor account warning" ,
+            dialogText = stringResource(id = R.string.visitor_warning),
+            buttonText = "Save",
+            userInput = authViewModel.visitorNickname,
+            onInputChanged = { authViewModel.onVisitorNicknameChanged(it) }
+        )
+    }
+
+
 }
 
 @Composable

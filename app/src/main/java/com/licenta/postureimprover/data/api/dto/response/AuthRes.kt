@@ -1,4 +1,4 @@
-package com.licenta.postureimprover.data.api.dto
+package com.licenta.postureimprover.data.api.dto.response
 import kotlinx.serialization.Serializable
 @Serializable
 data class AuthRes(

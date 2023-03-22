@@ -26,12 +26,11 @@ class MainViewModel @Inject constructor(
 
     private val token = prefs.getString("jwt", "no_token")!!
 
-
     var nickname: String by mutableStateOf("")
 
     var isLoading: Boolean by mutableStateOf(true)
 
-    init {
+    fun whatUser() {
         viewModelScope.launch {
             try {
                 nickname = client.get {
@@ -42,19 +41,12 @@ class MainViewModel @Inject constructor(
                     }
                 }.body()
                 isLoading = false
-            }
-            catch (e: SocketTimeoutException) {
-                // rely on room db until server is online
+            } catch (e: Exception) {
+                nickname = prefs.getString("nickname", "")!!
                 isLoading = false
-            }
-            catch(e: HttpRequestTimeoutException) {
-                isLoading = false
-            }
-            catch(e: Exception) {
                 e.printStackTrace()
             }
-
         }
-    }
 
+    }
 }

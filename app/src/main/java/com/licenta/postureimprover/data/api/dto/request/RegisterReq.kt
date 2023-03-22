@@ -1,4 +1,4 @@
-package com.licenta.postureimprover.data.api.dto
+package com.licenta.postureimprover.data.api.dto.request
 import kotlinx.serialization.Serializable
 
 @Serializable

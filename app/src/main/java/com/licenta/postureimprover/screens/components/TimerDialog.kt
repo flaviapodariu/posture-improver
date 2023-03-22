@@ -40,7 +40,7 @@ fun TimerDialogItem(
     dialogStillShowing: (Boolean) -> Unit
 ) {
 
-    Dialog(onDismissRequest = {}) {
+    Dialog(onDismissRequest = { dialogStillShowing(false) }) {
         Card(
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
@@ -111,7 +111,15 @@ fun TimerDialogItem(
                 ) {
                     val buttonText =  if(timerDialogViewModel.showDialog1) "Exit" else "Back"
 
-                    Button(onClick = { timerDialogViewModel.onBackPressed() }) {
+                    Button(onClick = {
+                        if(timerDialogViewModel.showDialog1) {
+                          dialogStillShowing(false)
+                        }
+                        else {
+                            timerDialogViewModel.onBackPressed()
+                        }
+                    }
+                    ) {
                         Text(text = buttonText)
                     }
 

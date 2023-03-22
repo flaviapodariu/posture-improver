@@ -2,7 +2,7 @@ package com.licenta.postureimprover.util
 
 import android.graphics.PointF
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.licenta.postureimprover.data.models.PostureCapture
+import com.licenta.postureimprover.data.models.Capture
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.pow
@@ -79,7 +79,7 @@ import kotlin.math.pow
         )
     }
 
-fun checkPosture(body: List<PoseLandmark>): PostureCapture {
+fun checkPosture(body: List<PoseLandmark>): Capture {
     val nose = body[0].position
     val ears = mean(body[7].position, body[8].position)
     val shoulders = mean(body[11].position, body[12].position)
@@ -87,7 +87,7 @@ fun checkPosture(body: List<PoseLandmark>): PostureCapture {
     val knees = mean(body[25].position, body[26].position)
 
 
-    return PostureCapture(
+    return Capture(
         headForward = headForward(torso, shoulders, nose),
         lordosis = lordosis(shoulders, torso, knees),
         roundedShoulders = roundedShoulders(ears, shoulders)

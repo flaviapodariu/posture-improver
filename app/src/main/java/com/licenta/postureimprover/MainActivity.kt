@@ -28,7 +28,9 @@ class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         installSplashScreen().apply{
+            mainViewModel.whatUser()
             this.setKeepOnScreenCondition {
                 mainViewModel.isLoading
             }
@@ -41,9 +43,14 @@ class MainActivity : ComponentActivity() {
                 ) {
                     val navController = rememberNavController()
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
+                    navController.backQueue.forEach{
+                        println(it.destination)
+                    }
                     StandardScaffold(
                         navController = navController,
                         showBottomBar = navBackStackEntry?.destination?.route !in listOf(
+                            Routes.Start.route,
                             Routes.Camera.route,
                             Routes.Login.route,
                             Routes.SignUp.route
@@ -51,7 +58,11 @@ class MainActivity : ComponentActivity() {
                         prefs = this.getSharedPreferences("preferences", MODE_PRIVATE)
 
                     ){
-                        Navigation(navController = navController, nickname = mainViewModel.nickname)
+                        // navigation is called before nickname update so wrong screen is rendered
+                        // this if causes a laggy screen render (dashboard)
+                        if(!mainViewModel.isLoading) {
+                            Navigation(navController = navController, nickname = mainViewModel.nickname)
+                        }
                     }
 
                 }

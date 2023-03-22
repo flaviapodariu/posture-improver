@@ -3,4 +3,7 @@
     <string name="login_route">login</string>
     <string name="Home">Home</string>
     <string name="Settings">Settings</string>
+    <string name="visitor_warning">
+        You are about to create a visitor account.\n\nIf you uninstall the app or something happens to your phone, your data will be lost forever!\n\nTo proceed, please enter your nickname below:
+    </string>
 </resources>

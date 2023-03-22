@@ -8,9 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.licenta.postureimprover.data.api.dto.CaptureRes
+import com.licenta.postureimprover.data.api.dto.response.CaptureRes
 import com.licenta.postureimprover.data.util.Task
-import com.licenta.postureimprover.screens.components.ErrorDialog
 import com.licenta.postureimprover.screens.viewmodels.DashboardViewModel
 
 @Composable

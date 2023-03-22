@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.licenta.postureimprover.data.api.dto.CaptureRes
-import com.licenta.postureimprover.data.api.dto.PostureHistory
+import com.licenta.postureimprover.data.api.dto.response.CaptureRes
+import com.licenta.postureimprover.data.api.dto.response.PostureHistory
 import com.licenta.postureimprover.data.api.services.CaptureService
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -13,11 +13,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.licenta.postureimprover.data.api.dto.WorkoutRes
+import com.licenta.postureimprover.data.api.dto.response.WorkoutRes
 import com.licenta.postureimprover.data.api.services.CaptureService
 import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.util.FrameAnalyzer
-import com.licenta.postureimprover.data.models.PostureCapture
+import com.licenta.postureimprover.data.models.Capture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
@@ -41,7 +41,7 @@ class CameraViewModel @Inject constructor(
         selector = cameraSelector
     }
 
-    fun sendPosture(capture: PostureCapture) : Task<WorkoutRes>? {
+    fun sendPosture(capture: Capture) : Task<WorkoutRes>? {
         var workout: Task<WorkoutRes>? = null
         viewModelScope.launch {
             captureService.sendCapture(capture)?.let {
@@ -56,7 +56,7 @@ class CameraViewModel @Inject constructor(
     fun getImageAnalysis(
         context: Context,
         getLandmarks: (List<PoseLandmark>) -> Unit,
-        getPostureCapture: (PostureCapture) -> Unit
+        getPostureCapture: (Capture) -> Unit
     ): ImageAnalysis {
         return ImageAnalysis.Builder()
             .setTargetResolution(Size(1080, 2400))   // ??? height
