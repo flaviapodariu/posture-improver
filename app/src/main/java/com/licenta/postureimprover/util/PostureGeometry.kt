@@ -2,10 +2,9 @@ package com.licenta.postureimprover.util
 
 import android.graphics.PointF
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.licenta.postureimprover.data.models.Capture
+import com.licenta.postureimprover.data.api.dto.request.CaptureReq
 import kotlin.math.abs
 import kotlin.math.atan2
-import kotlin.math.pow
 
 /*
     Helpers for angle computation
@@ -16,14 +15,6 @@ import kotlin.math.pow
  */
     fun radiansToDegrees(radians: Float): Float {
         return ((radians * 180) / Math.PI).toFloat()
-    }
-
-    fun slope(a: PointF, b: PointF): Float {
-        return (b.y - a.y)/(b.x - a.x)
-    }
-
-    fun distanceBetween(a: PointF, b: PointF) : Float {
-        return (b.x - a.x).pow(2) + (b.y - a.y).pow(2)
     }
 
 /**
@@ -79,7 +70,7 @@ import kotlin.math.pow
         )
     }
 
-fun checkPosture(body: List<PoseLandmark>): Capture {
+fun checkPosture(body: List<PoseLandmark>): CaptureReq {
     val nose = body[0].position
     val ears = mean(body[7].position, body[8].position)
     val shoulders = mean(body[11].position, body[12].position)
@@ -87,7 +78,7 @@ fun checkPosture(body: List<PoseLandmark>): Capture {
     val knees = mean(body[25].position, body[26].position)
 
 
-    return Capture(
+    return CaptureReq(
         headForward = headForward(torso, shoulders, nose),
         lordosis = lordosis(shoulders, torso, knees),
         roundedShoulders = roundedShoulders(ears, shoulders)

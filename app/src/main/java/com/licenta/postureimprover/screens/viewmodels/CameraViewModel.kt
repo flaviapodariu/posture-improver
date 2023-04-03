@@ -1,6 +1,7 @@
 package com.licenta.postureimprover.screens.viewmodels
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -13,11 +14,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.licenta.postureimprover.data.api.dto.response.WorkoutRes
+import com.licenta.postureimprover.data.api.dto.request.CaptureReq
 import com.licenta.postureimprover.data.api.services.CaptureService
 import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.util.FrameAnalyzer
-import com.licenta.postureimprover.data.models.Capture
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
@@ -30,33 +30,34 @@ class CameraViewModel @Inject constructor(
     var preview: Preview,
     var analyzer: FrameAnalyzer,
     var executor: ExecutorService,
-    var captureService: CaptureService
+    var captureService: CaptureService,
+    var prefs: SharedPreferences
 ): ViewModel() {
 
+    private val token = prefs.getString("jwt", "")!!
+
     var timerRuns: Boolean by mutableStateOf(true)
-    var captureSent: Boolean by mutableStateOf(false)
     var isErrorDialogShowing: Boolean by mutableStateOf(false)
 
     fun changeSelector(cameraSelector: CameraSelector){
         selector = cameraSelector
     }
 
-    fun sendPosture(capture: Capture) : Task<WorkoutRes>? {
-        var workout: Task<WorkoutRes>? = null
+    fun sendPosture(capture: CaptureReq) : Task<Boolean>? {
+        var result: Task<Boolean>? = null
         viewModelScope.launch {
-            captureService.sendCapture(capture)?.let {
-                workout = it
+            captureService.insertCapture(capture, token)?.let {
+                result = it
             }
             println("$capture somecapture please")
         }
-        captureSent = true
-        return workout
+        return result
     }
 
     fun getImageAnalysis(
         context: Context,
         getLandmarks: (List<PoseLandmark>) -> Unit,
-        getPostureCapture: (Capture) -> Unit
+        getPostureCapture: (CaptureReq) -> Unit
     ): ImageAnalysis {
         return ImageAnalysis.Builder()
             .setTargetResolution(Size(1080, 2400))   // ??? height

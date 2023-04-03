@@ -1,7 +1,6 @@
 package com.licenta.postureimprover.screens.viewmodels
 
 import android.content.SharedPreferences
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue

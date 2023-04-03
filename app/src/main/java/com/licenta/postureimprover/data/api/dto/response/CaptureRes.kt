@@ -1,5 +1,6 @@
 package com.licenta.postureimprover.data.api.dto.response
 
+import com.licenta.postureimprover.data.local.entities.CaptureEntity
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -19,6 +20,15 @@ data class CaptureRes(
     val roundedShoulders: Float,
     @Serializable(with = LocalDateSerializer::class)
     val date: LocalDate
+)
+
+fun CaptureRes.asEntity() = CaptureEntity(
+    id = id,
+    userId = userId,
+    headForward = headForward,
+    lordosis = lordosis,
+    roundedShoulders = roundedShoulders,
+    date = date
 )
 
 

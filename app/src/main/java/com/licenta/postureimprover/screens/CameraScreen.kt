@@ -29,7 +29,7 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
-import com.licenta.postureimprover.data.models.Capture
+import com.licenta.postureimprover.data.api.dto.request.CaptureReq
 import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.screens.components.CameraTimer
 import com.licenta.postureimprover.screens.components.CommonDialog
@@ -65,7 +65,7 @@ fun CameraScreen(
     } )
 
     var landmarks: List<PoseLandmark>? = null
-    var capture: Capture? = null
+    var capture: CaptureReq? = null
 
     if(permissions.status.isGranted){
         val context = LocalContext.current
@@ -106,11 +106,9 @@ fun CameraScreen(
 
                                 cameraViewModel.isErrorDialogShowing = true
                             }
-
                             else -> Unit
                         }
                     }
-                    cameraViewModel.isErrorDialogShowing = true
 
                 }
             }
@@ -139,7 +137,6 @@ fun CameraScreen(
 
             }
         }
-
         if(cameraViewModel.isErrorDialogShowing) {
             CommonDialog(
                 onClickAction= reopenCamera,

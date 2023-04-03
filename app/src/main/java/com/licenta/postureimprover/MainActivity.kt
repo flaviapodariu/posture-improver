@@ -1,6 +1,5 @@
 package com.licenta.postureimprover
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -16,9 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.licenta.postureimprover.screens.components.StandardScaffold
 import com.licenta.postureimprover.screens.navigation.Navigation
 import com.licenta.postureimprover.screens.navigation.Routes
-import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
 import com.licenta.postureimprover.screens.viewmodels.MainViewModel
-import com.licenta.postureimprover.screens.viewmodels.TimerDialogViewModel
 import com.licenta.postureimprover.theme.PostureImproverTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,6 +46,7 @@ class MainActivity : ComponentActivity() {
                     }
                     StandardScaffold(
                         navController = navController,
+                        context = applicationContext,
                         showBottomBar = navBackStackEntry?.destination?.route !in listOf(
                             Routes.Start.route,
                             Routes.Camera.route,

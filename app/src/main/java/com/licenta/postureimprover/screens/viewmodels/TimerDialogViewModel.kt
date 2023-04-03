@@ -1,15 +1,11 @@
 package com.licenta.postureimprover.screens.viewmodels
 
-import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @HiltViewModel

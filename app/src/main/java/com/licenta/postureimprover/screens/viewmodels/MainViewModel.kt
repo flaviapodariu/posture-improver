@@ -10,10 +10,8 @@ import com.licenta.postureimprover.data.api.ApiRoutes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.ktor.client.*
 import io.ktor.client.call.*
-import io.ktor.client.network.sockets.*
 import io.ktor.client.plugins.*
 import io.ktor.client.request.*
-import io.ktor.http.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

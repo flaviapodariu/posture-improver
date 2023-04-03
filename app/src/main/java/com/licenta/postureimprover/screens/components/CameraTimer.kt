@@ -16,7 +16,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun CameraTimer(isTimerRunning: (Boolean) -> Unit) {
-    var secondsLeft: Int by remember { mutableStateOf(2) }
+    var secondsLeft: Int by remember { mutableStateOf(5) }
     
     LaunchedEffect(key1 = secondsLeft) {
 

@@ -2,7 +2,6 @@ package com.licenta.postureimprover.screens.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.traceEventStart
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -11,8 +10,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.licenta.postureimprover.screens.*
-import com.licenta.postureimprover.screens.components.StandardScaffold
-import okhttp3.Route
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
@@ -86,6 +83,10 @@ fun Navigation(navController: NavHostController, nickname: String) {
             })
         }
 
+        composable(route= Routes.Workouts.route) {
+            WorkoutScreen()
+        }
+
     }
     
 }
@@ -97,6 +98,7 @@ sealed class Routes(val route: String) {
     object Camera : Routes("camera")
     object Settings: Routes("settings")
     object Start: Routes("start")
+    object Workouts: Routes("workouts")
 
     fun passArgs(vararg args: String) : String {
         return buildString {

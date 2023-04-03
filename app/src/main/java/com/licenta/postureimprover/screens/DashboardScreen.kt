@@ -1,6 +1,9 @@
 package com.licenta.postureimprover.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,7 +41,7 @@ fun DashboardScreen(
 
         if(dashboardViewModel.userCaptures != null) {
             Column(modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(vertical = 15.dp)
             ) {
                 CapturesList(captures = dashboardViewModel.userCaptures!!)
@@ -62,11 +65,7 @@ fun DashboardScreen(
 fun CapturesList(captures: List<CaptureRes>) {
 
     captures.forEach{
-        Row(
-            modifier = Modifier.fillMaxSize()
-        ) {
             Text(text =" ${ it.headForward }")
-        }
 
     }
 

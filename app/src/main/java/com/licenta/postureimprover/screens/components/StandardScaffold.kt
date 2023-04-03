@@ -1,5 +1,6 @@
 package com.licenta.postureimprover.screens.components
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -8,22 +9,27 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import com.licenta.postureimprover.screens.navigation.Routes
-import com.licenta.postureimprover.screens.viewmodels.TimerDialogViewModel
-import javax.inject.Inject
+import com.licenta.postureimprover.theme.Workouts
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StandardScaffold(
     navController: NavHostController,
     prefs: SharedPreferences,
+    context: Context,
     icons: List<BottomNavIcon> = listOf(
         BottomNavIcon(
             route = Routes.Dashboard.passArgs(prefs.getString("nickname", "")!!),
             icon = Icons.Rounded.Home,
             description = "Home"
+        ),
+        BottomNavIcon(
+            route = Routes.Workouts.route,
+            icon = Icons.Workouts,
+            description = "Workouts"
         ),
         BottomNavIcon(
             route = Routes.Settings.route,
@@ -84,7 +90,11 @@ fun StandardScaffold(
 }
 
 
-
+data class BottomNavIcon(
+    val route: String,
+    val icon: ImageVector,
+    val description: String
+)
 
 
 
