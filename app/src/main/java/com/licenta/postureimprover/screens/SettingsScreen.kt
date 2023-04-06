@@ -10,12 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
+import com.licenta.postureimprover.screens.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     goToLogin: () -> Unit = {},
-    authViewModel: AuthenticationViewModel = hiltViewModel()
+    authViewModel: AuthenticationViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel = hiltViewModel()
     ) {
     Column(modifier = Modifier.fillMaxSize()) {
 
@@ -34,6 +36,20 @@ fun SettingsScreen(
                     )
 
                 }
+            }
+        )
+
+        ListItem(
+            modifier = Modifier.fillMaxWidth(),
+            headlineText = { Text(text= "Dark Mode") },
+            trailingContent = {
+                Switch(
+                    checked = mainViewModel.darkTheme,
+                    onCheckedChange = {
+                        mainViewModel.darkTheme = !mainViewModel.darkTheme
+                    },
+                    enabled = true
+                )
             }
         )
 

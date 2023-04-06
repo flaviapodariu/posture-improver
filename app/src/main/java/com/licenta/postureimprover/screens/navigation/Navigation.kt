@@ -73,6 +73,10 @@ fun Navigation(navController: NavHostController, nickname: String) {
                 reopenCamera = {
                     navController.popBackStack()
                     navController.navigate(Routes.Camera.route)
+                },
+                goToWorkouts = {
+                    navController.popBackStack()
+                    navController.navigate(Routes.Workouts.route)
                 }
             )
         }
@@ -84,7 +88,20 @@ fun Navigation(navController: NavHostController, nickname: String) {
         }
 
         composable(route= Routes.Workouts.route) {
-            WorkoutScreen()
+            WorkoutScreen(goToExerciseDetail = {
+                navController.navigate(Routes.ExerciseDetails.passArgs(it))
+            })
+        }
+        composable(
+            route= Routes.ExerciseDetails.route + "/{exerciseId}",
+            arguments = listOf(
+                navArgument("exerciseId"){
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) { entry ->
+            entry.arguments?.getString("exerciseId")?.let { ExerciseDetailsScreen() }
         }
 
     }
@@ -99,6 +116,7 @@ sealed class Routes(val route: String) {
     object Settings: Routes("settings")
     object Start: Routes("start")
     object Workouts: Routes("workouts")
+    object ExerciseDetails: Routes("exercise")
 
     fun passArgs(vararg args: String) : String {
         return buildString {

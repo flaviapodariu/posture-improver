@@ -1,6 +1,5 @@
 package com.licenta.postureimprover.screens.components
 
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -19,7 +18,6 @@ import com.licenta.postureimprover.theme.Workouts
 fun StandardScaffold(
     navController: NavHostController,
     prefs: SharedPreferences,
-    context: Context,
     icons: List<BottomNavIcon> = listOf(
         BottomNavIcon(
             route = Routes.Dashboard.passArgs(prefs.getString("nickname", "")!!),
@@ -72,20 +70,20 @@ fun StandardScaffold(
                 NavigationBar{
                     icons.forEachIndexed { index, icon ->
                         NavigationBarItem(
-                            icon = { Icon(icon.icon, contentDescription = icon.description) },
+                            icon = { Icon(icon.icon, contentDescription = icon.description, tint = MaterialTheme.colorScheme.secondary) },
                             label = { Text(icon.description) },
                             selected = selectedIcon == index,
                             onClick = {
                                 selectedIcon = index
                                 navController.navigate(icon.route)
-                            }
+                            },
                         )
                     }
                 }
             }
         },
     ) {
-        content(it)
+        content(PaddingValues(bottom=it.calculateBottomPadding()))
     }
 }
 

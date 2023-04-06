@@ -46,7 +46,6 @@ class MainActivity : ComponentActivity() {
                     }
                     StandardScaffold(
                         navController = navController,
-                        context = applicationContext,
                         showBottomBar = navBackStackEntry?.destination?.route !in listOf(
                             Routes.Start.route,
                             Routes.Camera.route,

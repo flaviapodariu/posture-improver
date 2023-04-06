@@ -136,4 +136,7 @@ dependencies {
 
     testImplementation "androidx.room:room-testing:$room_version"
 
+    implementation("io.coil-kt:coil-compose:2.3.0")
+
+
 }

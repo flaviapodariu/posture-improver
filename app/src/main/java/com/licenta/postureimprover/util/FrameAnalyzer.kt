@@ -41,6 +41,7 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                         returnLandmarks(bodyLandmarks)
 //                        Timber.tag("landmarkType").d(landmarksToString(bodyLandmarks))
                         val capture = checkPosture(bodyLandmarks)
+                        Timber.tag("capturez").d("${capture.lordosis}, ${capture.headForward},  ${capture.roundedShoulders}")
                         returnPostureCapture(capture)
                         imageProxy.close()
                     } else {

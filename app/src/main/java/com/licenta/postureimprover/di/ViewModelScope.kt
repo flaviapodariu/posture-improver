@@ -3,6 +3,8 @@ package com.licenta.postureimprover.di
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Bundle
+import androidx.lifecycle.SavedStateHandle
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

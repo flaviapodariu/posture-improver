@@ -22,7 +22,9 @@ class MainViewModel @Inject constructor(
 
 ): ViewModel() {
 
-    private val token = prefs.getString("jwt", "no_token")!!
+    var darkTheme: Boolean by mutableStateOf(false)
+
+    private val token = prefs.getString("jwt", "no_token") as String
 
     var nickname: String by mutableStateOf("")
 

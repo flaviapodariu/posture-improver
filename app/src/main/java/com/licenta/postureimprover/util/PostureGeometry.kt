@@ -34,17 +34,10 @@ import kotlin.math.atan2
         return radiansToDegrees( atanC - atanA)
     }
 
-/**
- *   Helpers for type of posture problem. Each type has a value:
- *    lordosis = 1
- *    head forward = 2
- *
- *
- */
-    fun lordosis(shoulders: PointF, torso: PointF, knees: PointF): Float {
-        val angle = angle(shoulders, torso, knees)
-//        Timber.tag("lordosis").i("$angle")
-        return angle
+    fun lordosis(shoulders: PointF, torso: PointF, ears: PointF): Float {
+
+        val differenceX = ears.x - torso.x
+        return differenceX
     }
 
     fun headForward(torso: PointF, shoulders:PointF, nose:PointF): Float {
@@ -80,7 +73,7 @@ fun checkPosture(body: List<PoseLandmark>): CaptureReq {
 
     return CaptureReq(
         headForward = headForward(torso, shoulders, nose),
-        lordosis = lordosis(shoulders, torso, knees),
+        lordosis = lordosis(shoulders, torso, ears),
         roundedShoulders = roundedShoulders(ears, shoulders)
     )
 

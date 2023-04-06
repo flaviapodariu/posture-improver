@@ -43,6 +43,7 @@ import timber.log.Timber
 @Composable
 fun CameraScreen(
     reopenCamera: () -> Unit,
+    goToWorkouts: () -> Unit,
     cameraViewModel: CameraViewModel = hiltViewModel()
 ) {
 
@@ -94,12 +95,13 @@ fun CameraScreen(
         else {
             LaunchedEffect(key1 = capture) {
                 capture?.let {
-                    Timber.tag("capturez").d("${it.lordosis}, ${it.headForward},  ${it.roundedShoulders}")
+//                    Timber.tag("capturez").d("${it.lordosis}, ${it.headForward},  ${it.roundedShoulders}")
 
                     cameraViewModel.sendPosture(it)?.let { res ->
                         when(res) {
                             is Task.Success -> {
                                 cameraViewModel.isErrorDialogShowing = false
+                                goToWorkouts()
                             }
 
                             is Task.Failure -> {

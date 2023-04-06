@@ -1,9 +1,6 @@
 package com.licenta.postureimprover.di
 
-import com.licenta.postureimprover.data.api.services.AuthService
-import com.licenta.postureimprover.data.api.services.AuthServiceImpl
-import com.licenta.postureimprover.data.api.services.CaptureService
-import com.licenta.postureimprover.data.api.services.CaptureServiceImpl
+import com.licenta.postureimprover.data.api.services.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -21,4 +18,8 @@ abstract class ServiceModule {
     @Binds
     @Singleton
     abstract fun bindCaptureService(captureServiceImpl: CaptureServiceImpl) : CaptureService
+
+    @Binds
+    @Singleton
+    abstract fun bindWorkoutService(workoutServiceImpl: WorkoutServiceImpl) : WorkoutService
 }
