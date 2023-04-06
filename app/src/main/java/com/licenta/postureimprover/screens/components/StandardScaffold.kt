@@ -8,7 +8,9 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.licenta.postureimprover.screens.navigation.Routes
 import com.licenta.postureimprover.theme.Workouts
@@ -83,7 +85,9 @@ fun StandardScaffold(
             }
         },
     ) {
-        content(PaddingValues(bottom=it.calculateBottomPadding()))
+        Box(modifier = Modifier.fillMaxSize().padding(it)) {
+            content(it)
+        }
     }
 }
 

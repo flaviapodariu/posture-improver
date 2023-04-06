@@ -1,6 +1,9 @@
 package com.licenta.postureimprover.screens.navigation
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -17,96 +20,97 @@ fun Navigation(navController: NavHostController, nickname: String) {
 
     println("y nickname is $nickname")
 
-    NavHost(
-        navController = navController,
-        startDestination = Routes.Start.route,
-        modifier = Modifier.fillMaxSize()
-    ) {
-        composable(route = Routes.Start.route) {
-            if(nickname != "") {
-                navController.popBackStack()
-                navController.navigate(Routes.Dashboard.passArgs(nickname))
-            }
-            else {
-                navController.popBackStack()
-                navController.navigate(Routes.Login.route)
-            }
-        }
-        composable(route= Routes.Login.route) {
-            LoginScreen(
-                goToDashboard = {
-                    navController.navigate(Routes.Dashboard.passArgs(it))
-            },
-                goToSignUp = {
+        NavHost(
+            navController = navController,
+            startDestination = Routes.Start.route,
+            modifier = Modifier.fillMaxSize()
+        ) {
+            composable(route = Routes.Start.route) {
+                if(nickname != "") {
                     navController.popBackStack()
-                    navController.navigate(Routes.SignUp.route)
+                    navController.navigate(Routes.Dashboard.passArgs(nickname))
                 }
-            )
-        }
-        composable(route= Routes.SignUp.route) {
-            SignUpScreen(
-                goToDashboard = {
-                    navController.navigate(Routes.Dashboard.passArgs(it))
-                },
-                goToLogin = {
+                else {
                     navController.popBackStack()
                     navController.navigate(Routes.Login.route)
                 }
-            )
-        }
-        composable(
-            route = Routes.Dashboard.route + "/{nickname}",
-            arguments = listOf(
-                navArgument("nickname"){
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
+            }
+            composable(route= Routes.Login.route) {
+                LoginScreen(
+                    goToDashboard = {
+                        navController.navigate(Routes.Dashboard.passArgs(it))
+                    },
+                    goToSignUp = {
+                        navController.popBackStack()
+                        navController.navigate(Routes.SignUp.route)
+                    }
+                )
+            }
+            composable(route= Routes.SignUp.route) {
+                SignUpScreen(
+                    goToDashboard = {
+                        navController.navigate(Routes.Dashboard.passArgs(it))
+                    },
+                    goToLogin = {
+                        navController.popBackStack()
+                        navController.navigate(Routes.Login.route)
+                    }
+                )
+            }
+            composable(
+                route = Routes.Dashboard.route + "/{nickname}",
+                arguments = listOf(
+                    navArgument("nickname"){
+                        type = NavType.StringType
+                        nullable = true
+                    }
+                )
 
-        ){
-            entry ->
-            entry.arguments?.getString("nickname")?.let { DashboardScreen(nickname = it) }
-        }
+            ){
+                    entry ->
+                entry.arguments?.getString("nickname")?.let { DashboardScreen(nickname = it) }
+            }
 
-        composable(route= Routes.Camera.route) {
-            CameraScreen(
-                reopenCamera = {
-                    navController.popBackStack()
-                    navController.navigate(Routes.Camera.route)
-                },
-                goToWorkouts = {
-                    navController.popBackStack()
-                    navController.navigate(Routes.Workouts.route)
-                }
-            )
-        }
+            composable(route= Routes.Camera.route) {
+                CameraScreen(
+                    reopenCamera = {
+                        navController.popBackStack()
+                        navController.navigate(Routes.Camera.route)
+                    },
+                    goToWorkouts = {
+                        navController.popBackStack()
+                        navController.navigate(Routes.Workouts.route)
+                    }
+                )
+            }
 
-        composable(route= Routes.Settings.route) {
-            SettingsScreen(goToLogin = {
-                navController.navigate(Routes.Login.route)
-            })
-        }
+            composable(route= Routes.Settings.route) {
+                SettingsScreen(goToLogin = {
+                    navController.navigate(Routes.Login.route)
+                })
+            }
 
-        composable(route= Routes.Workouts.route) {
-            WorkoutScreen(goToExerciseDetail = {
-                navController.navigate(Routes.ExerciseDetails.passArgs(it))
-            })
-        }
-        composable(
-            route= Routes.ExerciseDetails.route + "/{exerciseId}",
-            arguments = listOf(
-                navArgument("exerciseId"){
-                    type = NavType.StringType
-                    nullable = true
-                }
-            )
-        ) { entry ->
-            entry.arguments?.getString("exerciseId")?.let { ExerciseDetailsScreen() }
+            composable(route= Routes.Workouts.route) {
+                WorkoutScreen(goToExerciseDetail = {
+                    navController.navigate(Routes.ExerciseDetails.passArgs(it))
+                })
+            }
+            composable(
+                route= Routes.ExerciseDetails.route + "/{exerciseId}",
+                arguments = listOf(
+                    navArgument("exerciseId"){
+                        type = NavType.StringType
+                        nullable = true
+                    }
+                )
+            ) { entry ->
+                entry.arguments?.getString("exerciseId")?.let { ExerciseDetailsScreen() }
+            }
+
         }
 
     }
-    
-}
+
 
 sealed class Routes(val route: String) {
     object Login : Routes("login")

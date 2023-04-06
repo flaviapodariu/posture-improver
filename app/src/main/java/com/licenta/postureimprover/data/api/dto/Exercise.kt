@@ -9,5 +9,6 @@ data class Exercise(
     var lordosisScore: Int,
     var headFwdScore: Int,
     var roundedShScore: Int,
+    var targetedMuscle : String,
     var imageUrl: String
 )

@@ -45,7 +45,7 @@ fun ExerciseDetailsScreen(
 
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text= "* Insert targeted muscle",
+                            text= "* ${exercise.targetedMuscle}",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center
