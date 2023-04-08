@@ -12,9 +12,9 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import javax.inject.Inject
 
-class AuthServiceImpl @Inject constructor(
+class AuthApiImpl @Inject constructor(
     private val client: HttpClient,
-) : AuthService  {
+) : AuthApi  {
     override suspend fun login(loginReq: LoginReq) : Task<AuthRes>{
         return try {
             val res: AuthRes = client.post {

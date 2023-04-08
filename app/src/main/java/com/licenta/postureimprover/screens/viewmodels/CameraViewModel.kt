@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
-import com.licenta.postureimprover.data.api.services.CaptureService
+import com.licenta.postureimprover.data.api.services.CaptureApi
 import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.util.FrameAnalyzer
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +30,7 @@ class CameraViewModel @Inject constructor(
     var preview: Preview,
     var analyzer: FrameAnalyzer,
     var executor: ExecutorService,
-    var captureService: CaptureService,
+    var captureApi: CaptureApi,
     var prefs: SharedPreferences
 ): ViewModel() {
 
@@ -46,7 +46,7 @@ class CameraViewModel @Inject constructor(
     fun sendPosture(capture: CaptureReq) : Task<Boolean>? {
         var result: Task<Boolean>? = null
         viewModelScope.launch {
-            captureService.insertCapture(capture, token)?.let {
+            captureApi.insertCapture(capture, token)?.let {
                 result = it
             }
             println("$capture somecapture please")

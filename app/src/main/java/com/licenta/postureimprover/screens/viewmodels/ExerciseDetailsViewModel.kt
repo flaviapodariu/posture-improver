@@ -7,7 +7,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.licenta.postureimprover.data.api.dto.Exercise
-import com.licenta.postureimprover.data.api.services.WorkoutService
+import com.licenta.postureimprover.data.api.services.WorkoutApi
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,18 +15,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExerciseDetailsViewModel @Inject constructor(
-    private val workoutService: WorkoutService,
+    private val workoutApi: WorkoutApi,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    val exerciseId: String = savedStateHandle["exerciseId"]!!
+    private val exerciseId: String = savedStateHandle["exerciseId"]!!
     var exercise: Exercise? by mutableStateOf(null)
 
     init {
         viewModelScope.launch {
-            val res = workoutService.getExerciseById(exerciseId.toInt())
+            val res = workoutApi.getExerciseById(exerciseId.toInt())
             when(res) {
-                is Task.Success -> exercise = res.result
+                is Task.Success -> exercise = res.data
                 is Task.Failure -> println("todo")
                 is Task.Loading -> println("show loading")
             }

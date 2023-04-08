@@ -5,6 +5,8 @@ import androidx.camera.core.CameraSelector
 import androidx.camera.core.CameraSelector.LENS_FACING_FRONT
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.room.Room
+import com.licenta.postureimprover.data.local.PostureDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,5 +70,12 @@ object AppModule {
             install(HttpTimeout)
         }
     }
+
+    @Provides
+    @Singleton
+    fun provideRoomDb(app: Application) : PostureDatabase {
+        return Room.databaseBuilder(app, PostureDatabase::class.java,"posture_database").build()
+    }
+
 
 }

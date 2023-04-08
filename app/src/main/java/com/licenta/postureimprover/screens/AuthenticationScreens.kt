@@ -36,11 +36,11 @@ fun LoginScreen(
         authViewModel.authState?.let {
             when(it) {
                 is Task.Success -> {
-                    authViewModel.onSuccesfulAuth(it.result.token, it.result.nickname)
-                    goToDashboard(it.result.nickname)
+                    authViewModel.onSuccesfulAuth(it.data!!.token, it.data.nickname)
+                    goToDashboard(it.data.nickname)
                 }
                 is Task.Failure -> {
-                    println(it.exception.message)
+                    println(it.error!!.message)
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
                 }
                 else -> Unit
@@ -126,8 +126,8 @@ fun SignUpScreen(
         authViewModel.authState?.let {
             when(it) {
                 is Task.Success -> {
-                    authViewModel.onSuccesfulAuth(it.result.token, it.result.nickname)
-                    goToDashboard(it.result.nickname)
+                    authViewModel.onSuccesfulAuth(it.data!!.token, it.data.nickname)
+                    goToDashboard(it.data.nickname)
                 }
                 is Task.Failure ->
                     Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()

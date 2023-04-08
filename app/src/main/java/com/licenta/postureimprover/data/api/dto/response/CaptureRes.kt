@@ -24,7 +24,6 @@ data class CaptureRes(
 
 fun CaptureRes.asEntity() = CaptureEntity(
     id = id,
-    userId = userId,
     headForward = headForward,
     lordosis = lordosis,
     roundedShoulders = roundedShoulders,

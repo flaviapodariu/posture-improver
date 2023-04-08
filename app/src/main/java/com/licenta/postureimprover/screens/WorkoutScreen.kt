@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.licenta.postureimprover.data.api.dto.response.WorkoutRes
+import com.licenta.postureimprover.data.local.entities.ExerciseEntity
 import com.licenta.postureimprover.screens.viewmodels.WorkoutViewModel
 import com.licenta.postureimprover.theme.PurpleGrey40
 
@@ -72,7 +73,7 @@ fun WorkoutScreen(
             LazyColumn(modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()) {
-                items(workoutViewModel.exerciseList, key= { it.exercise.id }) {
+                items(workoutViewModel.exerciseList, key= { it.id }) {
                     ExerciseItem(item = it, goToExerciseDetail = goToExerciseDetail)
                 }
             }
@@ -81,14 +82,14 @@ fun WorkoutScreen(
 }
 @Composable
 fun ExerciseItem(
-    item: WorkoutRes,
+    item: ExerciseEntity,
     goToExerciseDetail: (exerciseId: String) -> Unit) {
 
     Card(
         modifier= Modifier.clickable(
             enabled = true,
             onClick = {
-                goToExerciseDetail("${ item.exercise.id }")
+                goToExerciseDetail("${ item.id }")
             }
         ),
         shape= RoundedCornerShape(40.dp),
@@ -106,7 +107,7 @@ fun ExerciseItem(
                 Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                 ) {
                     Text(
-                        text= item.exercise.name,
+                        text= item.name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W400,
                     )
@@ -127,7 +128,7 @@ fun ExerciseItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     AsyncImage(
-                        model = item.exercise.imageUrl,
+                        model = item.imageUrl,
                         contentDescription = null,
                         modifier = Modifier
                             .clip(RoundedCornerShape(20.dp))

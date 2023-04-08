@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.licenta.postureimprover.data.api.dto.request.LoginReq
 import com.licenta.postureimprover.data.api.dto.request.RegisterReq
 import com.licenta.postureimprover.data.api.dto.response.AuthRes
-import com.licenta.postureimprover.data.api.services.AuthService
+import com.licenta.postureimprover.data.api.services.AuthApi
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val authService: AuthService,
+    private val authApi: AuthApi,
     private val prefs: SharedPreferences
 ): ViewModel()
 {
@@ -58,7 +58,7 @@ class AuthenticationViewModel @Inject constructor(
 
     fun login() {
         viewModelScope.launch {
-            authService.login(LoginReq(email, password)).let {
+            authApi.login(LoginReq(email, password)).let {
                 authState = it
             }
         }
@@ -72,7 +72,7 @@ class AuthenticationViewModel @Inject constructor(
     fun register() {
         if (password == confirmPassword) {
             viewModelScope.launch {
-                authService.register(RegisterReq(email, nickname, password)).let {
+                authApi.register(RegisterReq(email, nickname, password)).let {
                     authState = it
                 }
             }

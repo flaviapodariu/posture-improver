@@ -1,7 +1,12 @@
 package com.licenta.postureimprover.data.util
 
-sealed class Task<out R> {
-    data class Success<out R>(val result: R): Task<R>()
-    data class Failure(val exception: Exception): Task<Nothing>()
-    object Loading: Task<Nothing>()
+sealed class Task<T>(
+    val data: T? = null,
+    val error: Throwable? = null
+) {
+    class Success<T>(data: T): Task<T>(data)
+    class Loading<T>(data: T? = null): Task<T>(data)
+    class Failure<T>(throwable: Throwable, data: T? = null) : Task<T>(data,throwable)
 }
+
+

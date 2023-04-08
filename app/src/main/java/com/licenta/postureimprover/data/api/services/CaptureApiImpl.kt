@@ -2,7 +2,7 @@ package com.licenta.postureimprover.data.api.services
 
 import com.licenta.postureimprover.data.api.ApiRoutes
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
-import com.licenta.postureimprover.data.api.dto.response.PostureHistory
+import com.licenta.postureimprover.data.api.dto.response.CaptureRes
 import com.licenta.postureimprover.data.util.Task
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -11,13 +11,13 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import javax.inject.Inject
 
-class CaptureServiceImpl @Inject constructor(
+class CaptureApiImpl @Inject constructor(
     private val client: HttpClient,
-) : CaptureService {
+) : CaptureApi {
 
-    override suspend fun getUserCaptures(token: String): Task<PostureHistory>? {
+    override suspend fun getUserCaptures(token: String): Task<List<CaptureRes>>? {
         return try {
-            val res: PostureHistory = client.get {
+            val res: List<CaptureRes> = client.get {
                 url(ApiRoutes.DASHBOARD)
                 bearerAuth(token)
             }.body()

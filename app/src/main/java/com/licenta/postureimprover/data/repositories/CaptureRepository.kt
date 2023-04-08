@@ -1,13 +1,31 @@
 package com.licenta.postureimprover.data.repositories
 
-import com.licenta.postureimprover.data.api.dto.request.CaptureReq
-import com.licenta.postureimprover.data.api.dto.response.CaptureRes
-import com.licenta.postureimprover.data.util.Task
-import kotlinx.coroutines.flow.Flow
+import androidx.room.withTransaction
+import com.licenta.postureimprover.data.api.dto.response.asEntity
+import com.licenta.postureimprover.data.api.services.CaptureApi
+import com.licenta.postureimprover.data.local.PostureDatabase
+import com.licenta.postureimprover.data.util.networkBoundTask
+import javax.inject.Inject
 
-interface CaptureRepository {
+class CaptureRepository @Inject constructor(
+    private val api: CaptureApi,
+    private val db: PostureDatabase
+) {
 
-    fun getAllCaptures(userId: Int) : Flow<List<CaptureRes>>
+    private val captureDao = db.capturesDao
+    fun getCaptures(token: String) = networkBoundTask(
+        query = {
+            captureDao.getAllCaptures()
+        },
+        fetch = {
+            api.getUserCaptures(token)
+        },
+        saveFetchResult = { captures ->
+            db.withTransaction {
+                captureDao.deleteAllCaptures()
+                captureDao.insertCaptures(captures?.data?.map { it.asEntity() }!!)
+            }
+        }
+    )
 
-    suspend fun insertCapture(capture: CaptureReq, token: String) : Task<Boolean>?
 }

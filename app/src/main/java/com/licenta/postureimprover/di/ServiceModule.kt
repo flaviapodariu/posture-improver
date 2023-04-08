@@ -13,13 +13,13 @@ abstract class ServiceModule {
 
     @Binds
     @Singleton
-    abstract fun bindAuthService(authServiceImpl: AuthServiceImpl) : AuthService
+    abstract fun bindAuthService(authServiceImpl: AuthApiImpl) : AuthApi
 
     @Binds
     @Singleton
-    abstract fun bindCaptureService(captureServiceImpl: CaptureServiceImpl) : CaptureService
+    abstract fun bindCaptureApi(captureServiceImpl: CaptureApiImpl) : CaptureApi
 
     @Binds
     @Singleton
-    abstract fun bindWorkoutService(workoutServiceImpl: WorkoutServiceImpl) : WorkoutService
+    abstract fun bindWorkoutService(workoutServiceImpl: WorkoutApiImpl) : WorkoutApi
 }

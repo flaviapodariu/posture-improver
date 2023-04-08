@@ -7,32 +7,40 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.licenta.postureimprover.data.api.dto.response.CaptureRes
-import com.licenta.postureimprover.data.api.dto.response.PostureHistory
-import com.licenta.postureimprover.data.api.services.CaptureService
+import com.licenta.postureimprover.data.api.services.CaptureApi
+import com.licenta.postureimprover.data.local.entities.CaptureEntity
+import com.licenta.postureimprover.data.repositories.CaptureRepository
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
+typealias CapturesFlow = Flow<Task<List<CaptureEntity>>>
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val captureService: CaptureService,
+    private val captureRepository: CaptureRepository,
     private val prefs: SharedPreferences
 ): ViewModel() {
 
-    init {
-        getUserHistory()
-    }
-    var userHistoryState: Task<PostureHistory>? by mutableStateOf(null)
-    var userCaptures: List<CaptureRes>? by mutableStateOf(null)
+    var userCaptures: List<CaptureEntity> by mutableStateOf(emptyList())
 
-    fun onUserCaptureChange(newCaptures: List<CaptureRes>) {
-        userCaptures = newCaptures
-    }
-
-    private fun getUserHistory() {
+    fun getUserHistory() {
         viewModelScope.launch {
-           userHistoryState = captureService.getUserCaptures(prefs.getString("jwt", "no_token")!!)
+            captureRepository.getCaptures(prefs.getString("jwt", "no_token")!!).collect {
+                when(it) {
+                    is Task.Failure -> {
+                        println(it.error)
+                    }
+                    else -> {
+                        userCaptures = it.data!!
+                        println("captures:\n $userCaptures")
+                    }
+                }
+            }
         }
     }
+
 }

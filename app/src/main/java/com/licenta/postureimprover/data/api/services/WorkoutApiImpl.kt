@@ -10,9 +10,9 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import javax.inject.Inject
 
-class WorkoutServiceImpl @Inject constructor(
+class WorkoutApiImpl @Inject constructor(
     private val client: HttpClient
-): WorkoutService {
+): WorkoutApi {
     override suspend fun getWorkoutForUser(token: String) : Task<List<WorkoutRes>> {
 
         return try {

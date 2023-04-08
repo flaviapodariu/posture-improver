@@ -1,0 +1,58 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "7208bd28a6d274ebe47c15e55e50139e",
+    "entities": [
+      {
+        "tableName": "Captures",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `headForward` REAL NOT NULL, `lordosis` REAL NOT NULL, `roundedShoulders` REAL NOT NULL, `date` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "headForward",
+            "columnName": "headForward",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lordosis",
+            "columnName": "lordosis",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "roundedShoulders",
+            "columnName": "roundedShoulders",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7208bd28a6d274ebe47c15e55e50139e')"
+    ]
+  }
+}
