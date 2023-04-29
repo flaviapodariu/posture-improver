@@ -27,4 +27,6 @@ class WorkoutRepository @Inject constructor(
             }
         }
     )
+
+    fun getExerciseById(id: Int) = dao.getExerciseById(id)
 }

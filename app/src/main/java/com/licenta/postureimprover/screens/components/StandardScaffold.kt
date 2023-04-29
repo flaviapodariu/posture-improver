@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.licenta.postureimprover.screens.navigation.Routes
+import com.licenta.postureimprover.theme.Camera
 import com.licenta.postureimprover.theme.Workouts
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,16 +23,19 @@ fun StandardScaffold(
     prefs: SharedPreferences,
     icons: List<BottomNavIcon> = listOf(
         BottomNavIcon(
+            index = 0,
             route = Routes.Dashboard.passArgs(prefs.getString("nickname", "")!!),
             icon = Icons.Rounded.Home,
             description = "Home"
         ),
         BottomNavIcon(
+            index = 1,
             route = Routes.Workouts.route,
             icon = Icons.Workouts,
             description = "Workouts"
         ),
         BottomNavIcon(
+            index = 2,
             route = Routes.Settings.route,
             icon = Icons.Rounded.Settings,
             description = "Settings"
@@ -62,7 +66,7 @@ fun StandardScaffold(
                         showTimerInfo = true
 
                     }) {
-                        Icon(Icons.Rounded.Add, "Camera")
+                        Icon(Icons.Camera, "Camera")
                     }
                 }
             },
@@ -70,13 +74,14 @@ fun StandardScaffold(
         bottomBar = {
             if(showBottomBar) {
                 NavigationBar{
+                    val curr_route = navController.currentDestination?.route
+                    println(curr_route)
                     icons.forEachIndexed { index, icon ->
                         NavigationBarItem(
                             icon = { Icon(icon.icon, contentDescription = icon.description, tint = MaterialTheme.colorScheme.secondary) },
                             label = { Text(icon.description) },
-                            selected = selectedIcon == index,
+                            selected = curr_route == icon.route,
                             onClick = {
-                                selectedIcon = index
                                 navController.navigate(icon.route)
                             },
                         )
@@ -93,6 +98,7 @@ fun StandardScaffold(
 
 
 data class BottomNavIcon(
+    val index: Int,
     val route: String,
     val icon: ImageVector,
     val description: String

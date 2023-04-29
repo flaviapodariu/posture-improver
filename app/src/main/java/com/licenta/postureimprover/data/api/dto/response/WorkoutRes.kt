@@ -17,7 +17,7 @@ fun WorkoutRes.asExerciseEntity() = ExerciseEntity(
     lordosisScore = exercise.lordosisScore,
     headFwdScore = exercise.headFwdScore,
     roundedShScore = exercise.roundedShScore,
-    targetedMuscle = exercise.targetedMuscle,
+    targetedMuscles = exercise.targetedMuscles,
     imageUrl = exercise.imageUrl,
     reps = reps
 )

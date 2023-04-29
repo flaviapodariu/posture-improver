@@ -6,6 +6,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
+import com.google.mlkit.vision.pose.PoseDetectorOptionsBase.DetectorMode
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
@@ -42,7 +43,7 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
 //                        Timber.tag("landmarkType").d(landmarksToString(bodyLandmarks))
                         val capture = checkPosture(bodyLandmarks)
                         Timber.tag("capturez").d("${capture.lordosis}, ${capture.headForward},  ${capture.roundedShoulders}")
-                        returnPostureCapture(capture)
+//                        returnPostureCapture(capture)
                         imageProxy.close()
                     } else {
                         Toast.makeText(

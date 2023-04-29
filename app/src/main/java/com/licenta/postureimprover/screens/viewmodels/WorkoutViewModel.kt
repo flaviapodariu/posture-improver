@@ -26,7 +26,7 @@ class WorkoutViewModel @Inject constructor(
         viewModelScope.launch {
             workoutRepository.getWorkout(token).collect {
                 when(it) {
-                    is Task.Failure -> println("do something ")
+                    is Task.Failure -> println(it.error!!.message)
                     else -> {
                         exerciseList = it.data!!
                     }

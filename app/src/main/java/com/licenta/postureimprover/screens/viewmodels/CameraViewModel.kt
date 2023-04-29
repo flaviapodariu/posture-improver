@@ -1,10 +1,13 @@
 package com.licenta.postureimprover.screens.viewmodels
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import android.hardware.camera2.CameraMetadata.LENS_FACING_FRONT
 import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
+import androidx.camera.core.ImageAnalysis.COORDINATE_SYSTEM_ORIGINAL
 import androidx.camera.core.ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -39,8 +42,8 @@ class CameraViewModel @Inject constructor(
     var timerRuns: Boolean by mutableStateOf(true)
     var isErrorDialogShowing: Boolean by mutableStateOf(false)
 
-    fun changeSelector(cameraSelector: CameraSelector){
-        selector = cameraSelector
+    fun changeSelector(){
+        selector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
     }
 
     fun sendPosture(capture: CaptureReq) : Task<Boolean>? {

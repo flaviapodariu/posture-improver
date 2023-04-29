@@ -3,6 +3,7 @@ package com.licenta.postureimprover.util
 import android.graphics.PointF
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
+import timber.log.Timber
 import kotlin.math.abs
 import kotlin.math.atan2
 
@@ -31,29 +32,37 @@ import kotlin.math.atan2
         val atanC = atan2(-c.y + b.y, c.x - b.x)
         val atanA = atan2(-a.y + b.y, a.x - b.x)
 //        Timber.tag("atans").d("${radiansToDegrees(atanC)}, ${radiansToDegrees(atanA)}")
-        return radiansToDegrees( atanC - atanA)
+        return abs(radiansToDegrees( atanC - atanA))
     }
 
-    fun lordosis(shoulders: PointF, torso: PointF, ears: PointF): Float {
-
-        val differenceX = ears.x - torso.x
-        return differenceX
+    fun lordosis(ears: PointF, torso: PointF, knees: PointF): Float {
+        val degrees = angle(knees, torso, ears)
+        val diffX = abs(ears.x - knees.x)
+        Timber.tag("lordosiss").d("$diffX")
+        return degrees
     }
 
-    fun headForward(torso: PointF, shoulders:PointF, nose:PointF): Float {
-        var degrees = angle(torso, shoulders, nose)
+    fun headForward(C7: PointF, ears: PointF): Float {
+        val yProjectionFromC7 = PointF(ears.x, C7.y)
+        var degrees = angle(yProjectionFromC7, C7, ears)
         // if points belong to the 2nd and 3rd quadrants, we get the outer angle
         if(degrees > 180){
             degrees = 360 - degrees
         }
-//        Timber.tag("head").d("$degrees")
+        Timber.tag("head").d("$degrees")
         return degrees
     }
 
 
-    //maybe compute estimated height loss related
-    fun roundedShoulders(ears: PointF, shoulders: PointF) : Float {
-        return abs(ears.x - shoulders.x)
+    fun roundedShoulders(C7: PointF, shoulders: PointF) : Float {
+        val yProjectionFromShoulder = PointF(C7.x, shoulders.y)
+
+        var degrees = angle(yProjectionFromShoulder, shoulders, C7)
+        if(degrees > 180){
+            degrees = 360 - degrees
+        }
+        Timber.tag("Sh angle").d("$degrees")
+        return degrees
     }
 
     fun mean(left: PointF, right: PointF) : PointF {
@@ -63,20 +72,26 @@ import kotlin.math.atan2
         )
     }
 
-fun checkPosture(body: List<PoseLandmark>): CaptureReq {
-    val nose = body[0].position
-    val ears = mean(body[7].position, body[8].position)
-    val shoulders = mean(body[11].position, body[12].position)
-    val torso = mean(body[23].position, body[24].position)
-    val knees = mean(body[25].position, body[26].position)
+    fun checkPosture(body: List<PoseLandmark>): CaptureReq {
+        val nose = body[0].position
+        val mouth = mean(body[9].position, body[10].position)
+        val ears = mean(body[7].position, body[8].position)
+        val shoulders = mean(body[11].position, body[12].position)
+        val torso = mean(body[23].position, body[24].position)
+        val knees = mean(body[25].position, body[26].position)
+
+        val C7 = PointF(
+            shoulders.x - (nose.x - ears.x)/2,
+            (nose.y + shoulders.y)/2
+        )
 
 
-    return CaptureReq(
-        headForward = headForward(torso, shoulders, nose),
-        lordosis = lordosis(shoulders, torso, ears),
-        roundedShoulders = roundedShoulders(ears, shoulders)
-    )
+        return CaptureReq(
+            headForward = headForward(C7, ears),
+            lordosis = lordosis(ears, torso, knees),
+            roundedShoulders = roundedShoulders(C7, shoulders)
+        )
 
-}
+    }
 
 

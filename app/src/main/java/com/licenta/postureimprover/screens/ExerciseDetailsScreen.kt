@@ -3,6 +3,7 @@ package com.licenta.postureimprover.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -17,6 +18,11 @@ fun ExerciseDetailsScreen(
     exerciseDetailsViewModel: ExerciseDetailsViewModel = hiltViewModel()
 ) {
     val exercise = exerciseDetailsViewModel.exercise
+
+    LaunchedEffect(key1 = exerciseDetailsViewModel.exercise) {
+        exerciseDetailsViewModel.getExerciseById()
+    }
+
     if(exercise != null) {
 
         Column(modifier = Modifier.fillMaxSize()) {
@@ -45,8 +51,8 @@ fun ExerciseDetailsScreen(
 
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text= "* ${exercise.targetedMuscle}",
-                            fontSize = 20.sp,
+                            text= exerciseDetailsViewModel.displayTargetedMuscles(exercise.targetedMuscles),
+                            fontSize = 19.sp,
                             fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center
                         )

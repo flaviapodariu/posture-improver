@@ -12,7 +12,7 @@ data class ExerciseEntity(
     var lordosisScore: Int,
     var headFwdScore: Int,
     var roundedShScore: Int,
-    var targetedMuscle: String,
+    var targetedMuscles: String,
     var imageUrl: String,
     var reps: Int
 )

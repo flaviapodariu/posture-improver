@@ -13,7 +13,8 @@ fun <ResultType, RequestType> networkBoundTask(
     val flow = if(shouldFetch(data)) {
         emit(Task.Loading(data))
         try {
-            saveFetchResult(fetch())
+            val f = fetch()
+            saveFetchResult(f)
             query().map { Task.Success(it) }
         }
         catch(throwable: Throwable) {
