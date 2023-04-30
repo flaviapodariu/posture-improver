@@ -3,20 +3,20 @@ package com.licenta.postureimprover.screens.viewmodels
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.hardware.camera2.CameraMetadata.LENS_FACING_FRONT
 import android.util.Size
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
-import androidx.camera.core.ImageAnalysis.COORDINATE_SYSTEM_ORIGINAL
 import androidx.camera.core.ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.pose.PoseLandmark
+import com.licenta.postureimprover.R
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
 import com.licenta.postureimprover.data.api.services.CaptureApi
 import com.licenta.postureimprover.data.util.Task
@@ -39,11 +39,52 @@ class CameraViewModel @Inject constructor(
 
     private val token = prefs.getString("jwt", "")!!
 
-    var timerRuns: Boolean by mutableStateOf(true)
-    var isErrorDialogShowing: Boolean by mutableStateOf(false)
+    var timerRuns: Boolean by mutableStateOf(false)
+    var timerSeconds: Int by mutableStateOf(5)
+    var timerIcon: Int by mutableStateOf(R.drawable.round_timer_40)
 
-    fun changeSelector(){
-        selector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+    var isErrorDialogShowing: Boolean by mutableStateOf(false)
+    var settingTimerOption: Boolean by mutableStateOf(false)
+    var lens: Int by mutableStateOf(CameraSelector.LENS_FACING_FRONT)
+
+    var shutterFired = false
+    var onClickTimerIcon = { settingTimerOption = true }
+
+    @SuppressLint("RestrictedApi")
+    fun changeSelector() {
+        if(selector.lensFacing == CameraSelector.LENS_FACING_FRONT) {
+            selector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
+            lens = CameraSelector.LENS_FACING_BACK
+            timerIcon = R.drawable.round_timer_40
+            onClickTimerIcon = {}
+        }
+        else {
+            selector = CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_FRONT).build()
+            lens = CameraSelector.LENS_FACING_FRONT
+            onClickTimerIcon = { settingTimerOption = true }
+        }
+    }
+
+    fun shutterPressed() {
+        if(lens == CameraSelector.LENS_FACING_FRONT)
+            timerRuns = true
+        else {
+            shutterFired = true
+        }
+    }
+
+    fun toggleTimerOptionsVisibility() {
+        settingTimerOption = !settingTimerOption
+    }
+
+    fun selectTimerSeconds(seconds: Int) {
+        timerSeconds = seconds
+
+        when(seconds){
+            5 -> timerIcon = R.drawable.timer_5s
+            10 -> timerIcon = R.drawable.timer_10s
+            15 -> timerIcon = R.drawable.timer_15s
+        }
     }
 
     fun sendPosture(capture: CaptureReq) : Task<Boolean>? {

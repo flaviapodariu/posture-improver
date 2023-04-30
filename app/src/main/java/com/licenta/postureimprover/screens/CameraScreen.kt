@@ -8,8 +8,17 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -19,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -33,19 +43,22 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.mlkit.vision.pose.PoseLandmark
+import com.licenta.postureimprover.R
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
 import com.licenta.postureimprover.data.util.Task
-import com.licenta.postureimprover.R
 import com.licenta.postureimprover.screens.components.CameraTimer
 import com.licenta.postureimprover.screens.components.CommonDialog
+import com.licenta.postureimprover.screens.components.TimerOptions
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
+import com.licenta.postureimprover.theme.AcidYellow
 import com.licenta.postureimprover.theme.CameraShutter
 import com.licenta.postureimprover.theme.Orange50
+import com.licenta.postureimprover.theme.Purple40
 import com.licenta.postureimprover.theme.Purple80
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 
-@OptIn(DelicateCoroutinesApi::class)
 @ExperimentalPermissionsApi
 @Composable
 fun CameraScreen(
@@ -80,8 +93,11 @@ fun CameraScreen(
         getLandmarks = { list ->  landmarks = list },
         getPostureCapture = { postureCapture -> capture = postureCapture }
     )
+    val backLens = CameraSelector.LENS_FACING_BACK
+
     if(permissions.status.isGranted){
         Box(modifier = Modifier.fillMaxSize()){
+
             CameraView(
                 cameraViewModel.provider,
                 cameraViewModel.selector,
@@ -91,13 +107,65 @@ fun CameraScreen(
                 LocalLifecycleOwner.current,
             )
 
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom) {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
+                        .background(Purple40),
+
+                ) {
+                    if(!cameraViewModel.settingTimerOption) {
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight()
+                            .padding(horizontal = 50.dp, vertical = 20.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.round_cameraswitch_40),
+                                contentDescription = "camera selector",
+                                modifier = Modifier.clickable {
+                                        cameraViewModel.changeSelector()
+                                    },
+                                tint = Color.White
+                            )
+                            CameraShutter { cameraViewModel.shutterPressed() }
+                            Icon(
+                                painter = painterResource(id = cameraViewModel.timerIcon),
+                                contentDescription = "timer selector",
+                                modifier = Modifier.clickable {
+                                    cameraViewModel.onClickTimerIcon()
+                                },
+                                tint = if(cameraViewModel.lens == backLens) Color.Gray else AcidYellow
+                            )
+
+                        }
+                    }
+                    else {
+                        TimerOptions(
+                            { cameraViewModel.toggleTimerOptionsVisibility() },
+                            { cameraViewModel.selectTimerSeconds(it) },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
+                }
+            }
+
+
             runBlocking {
                 delay(100)
             }
         if(cameraViewModel.timerRuns) {
-            CameraTimer(isTimerRunning = { runs -> cameraViewModel.timerRuns = runs })
+            CameraTimer(
+                seconds = cameraViewModel.timerSeconds,
+                isTimerRunning = { runs -> cameraViewModel.timerRuns = runs }
+            )
         }
-        else {
+        if((cameraViewModel.lens == backLens && cameraViewModel.shutterFired) ||
+            !cameraViewModel.timerRuns) {
             LaunchedEffect(key1 = capture) {
                 imageAnalysis.clearAnalyzer()
                 capture?.let {
@@ -158,29 +226,6 @@ fun CameraScreen(
 
 
             }
-        }
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth().wrapContentHeight()
-                    .padding(horizontal = 50.dp, vertical = 40.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.round_cameraswitch_40),
-                    contentDescription = "camera selector",
-                    modifier = Modifier.clickable {
-                        cameraViewModel.changeSelector()
-                    })
-                CameraShutter()
-                Icon(
-                    painter = painterResource(id = R.drawable.round_timer_40),
-                    contentDescription = "timer selector" )
-            }
-
 
         }
 
@@ -193,8 +238,6 @@ fun CameraScreen(
             )
         }
     }
-
-
 
 }
 
@@ -224,7 +267,6 @@ fun CameraView(
                 selector,
                 preview,
                 imageAnalysis
-
             )
             preview.setSurfaceProvider(previewView.surfaceProvider)
         }

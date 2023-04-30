@@ -1,6 +1,8 @@
 package com.licenta.postureimprover.theme
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.materialIcon
@@ -142,10 +144,11 @@ val Icons.Camera: ImageVector
 private var _camera: ImageVector? = null
 
 @Composable
-fun CameraShutter() {
+fun CameraShutter(onClick: () -> Unit) {
     Canvas(
         modifier = Modifier
             .size(size = 50.dp)
+            .clickable { onClick() }
     ) {
         drawCircle(
             color = Color.White

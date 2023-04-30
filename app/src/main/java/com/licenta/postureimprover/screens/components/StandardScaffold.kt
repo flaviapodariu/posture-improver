@@ -23,19 +23,16 @@ fun StandardScaffold(
     prefs: SharedPreferences,
     icons: List<BottomNavIcon> = listOf(
         BottomNavIcon(
-            index = 0,
             route = Routes.Dashboard.passArgs(prefs.getString("nickname", "")!!),
             icon = Icons.Rounded.Home,
             description = "Home"
         ),
         BottomNavIcon(
-            index = 1,
             route = Routes.Workouts.route,
             icon = Icons.Workouts,
             description = "Workouts"
         ),
         BottomNavIcon(
-            index = 2,
             route = Routes.Settings.route,
             icon = Icons.Rounded.Settings,
             description = "Settings"
@@ -98,7 +95,6 @@ fun StandardScaffold(
 
 
 data class BottomNavIcon(
-    val index: Int,
     val route: String,
     val icon: ImageVector,
     val description: String
