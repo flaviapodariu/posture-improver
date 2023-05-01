@@ -1,6 +1,7 @@
 package com.licenta.postureimprover.screens
 
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Icon
@@ -97,21 +97,56 @@ fun CameraScreen(
 
     if(permissions.status.isGranted){
         Box(modifier = Modifier.fillMaxSize()){
-
             CameraView(
                 cameraViewModel.provider,
                 cameraViewModel.selector,
                 cameraViewModel.preview,
                 imageAnalysis,
                 context,
-                LocalLifecycleOwner.current,
+                LocalLifecycleOwner.current
             )
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                landmarks?.let {
+                    Timber.tag("points").d("${it[0].position.x} ${it[0].position.y}")
+                    val shX = (it[12].position.x + it[11].position.x)/2
+                    val shY = (it[12].position.y + it[11].position.y)/2
+
+                    val c7X = shX - (it[0].position.x - (it[7].position.x + it[8].position.x)/2) /2
+                    val c7Y = (it[0].position.y + shY)/2
+
+                    val earsX = (it[7].position.x + it[8].position.x)/2
+                    val earsY = (it[7].position.y + it[8].position.y)/2
+
+                    val kneesX = (it[25].position.x + it[26].position.x)/2
+                    val kneesY = (it[25].position.y + it[26].position.y)/2
+
+                    val brush = Brush.linearGradient(listOf(Orange50, Orange50))
+                    val brushDistance = Brush.linearGradient(listOf(Purple80, Purple80))
+                    val offsets = listOf(
+                        Offset(1080 - it[12].position.x, it[12].position.y - 80),
+                        Offset(1080 - it[11].position.x, it[11].position.y - 80),
+                        Offset(1080 - c7X , c7Y - 80),
+                        Offset(1080 - earsX, earsY - 80)
+                    )
+                    drawCircle(brush, radius= 5f, center= offsets[2])
+                    drawPoints(
+                        offsets,
+                        PointMode.Lines,
+                        brush,
+                        strokeWidth = 10.0f
+                    )
+                    drawLine(brush, offsets[0], Offset(1080 - it[0].position.x, it[0].position.y - 80), strokeWidth = 10.0f)
+                    drawLine(brush, offsets[0], Offset(1080 - it[24].position.x, it[24].position.y - 80), strokeWidth = 10.0f)
+                    drawLine(brushDistance, offsets[3], Offset(1080 - kneesX, kneesY - 80), strokeWidth = 13f)
+                }
+            }
 
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Bottom) {
                 Column(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .background(Purple40),
 
                 ) {
@@ -165,15 +200,15 @@ fun CameraScreen(
             )
         }
         if((cameraViewModel.lens == backLens && cameraViewModel.shutterFired) ||
-            !cameraViewModel.timerRuns) {
+            (cameraViewModel.lens != backLens && !cameraViewModel.timerRuns)) {
             LaunchedEffect(key1 = capture) {
-                imageAnalysis.clearAnalyzer()
                 capture?.let {
 //                    Timber.tag("capturez").d("${it.lordosis}, ${it.headForward},  ${it.roundedShoulders}")
                     cameraViewModel.sendPosture(it)?.let { res ->
                         when(res) {
                             is Task.Success -> {
                                 cameraViewModel.isErrorDialogShowing = false
+                                imageAnalysis.clearAnalyzer()
                                 goToWorkouts()
                             }
 
@@ -188,45 +223,6 @@ fun CameraScreen(
             }
 
         }
-
-            Canvas(modifier = Modifier.fillMaxSize()) {
-                landmarks?.let {
-                    Timber.tag("points").d("${it[0].position.x} ${it[0].position.y}")
-                    val shX = (it[12].position.x + it[11].position.x)/2
-                    val shY = (it[12].position.y + it[11].position.y)/2
-
-                    val c7X = shX - (it[0].position.x - (it[7].position.x + it[8].position.x)/2) /2
-                    val c7Y = (it[0].position.y + shY)/2
-
-                    val earsX = (it[7].position.x + it[8].position.x)/2
-                    val earsY = (it[7].position.y + it[8].position.y)/2
-
-                    val kneesX = (it[25].position.x + it[26].position.x)/2
-                    val kneesY = (it[25].position.y + it[26].position.y)/2
-
-                    val brush = Brush.linearGradient(listOf(Orange50, Orange50))
-                    val brushDistance = Brush.linearGradient(listOf(Purple80, Purple80))
-                    val offsets = listOf(
-                        Offset(1080 - it[12].position.x, it[12].position.y - 80),
-                        Offset(1080 - it[11].position.x, it[11].position.y - 80),
-                        Offset(1080 - c7X , c7Y - 80),
-                        Offset(1080 - earsX, earsY - 80)
-                    )
-                    drawCircle(brush, radius= 5f, center= offsets[2])
-                    drawPoints(
-                        offsets,
-                        PointMode.Lines,
-                        brush,
-                        strokeWidth = 10.0f
-                    )
-                    drawLine(brush, offsets[0], Offset(1080 - it[0].position.x, it[0].position.y - 80), strokeWidth = 10.0f)
-                    drawLine(brush, offsets[0], Offset(1080 - it[24].position.x, it[24].position.y - 80), strokeWidth = 10.0f)
-                    drawLine(brushDistance, offsets[3], Offset(1080 - kneesX, kneesY - 80), strokeWidth = 13f)
-                }
-
-
-            }
-
         }
 
         if(cameraViewModel.isErrorDialogShowing) {
@@ -257,9 +253,8 @@ fun CameraView(
         }
     }
 
-
 //    only recompose if selector is changed (from back to front facing camera)
-    LaunchedEffect(key1 = selector , block ={
+    LaunchedEffect(key1 = selector , block = {
         try{
             provider.unbindAll()
             provider.bindToLifecycle(
