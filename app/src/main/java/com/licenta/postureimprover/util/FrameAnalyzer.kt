@@ -47,7 +47,6 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                         imageProxy.close()
                     } else {
                         Toast.makeText(
-
                             context,
                             "Person is not inside capture screen!",
                             Toast.LENGTH_SHORT

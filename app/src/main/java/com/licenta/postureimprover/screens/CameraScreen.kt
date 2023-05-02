@@ -23,7 +23,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -86,7 +89,9 @@ fun CameraScreen(
     } )
 
     val context = LocalContext.current
-    var landmarks: List<PoseLandmark>? = null
+    var landmarks: List<PoseLandmark>? by remember {
+        mutableStateOf(null)
+    }
     var capture: CaptureReq? = null
     val imageAnalysis = cameraViewModel.getImageAnalysis(
         context,
@@ -106,6 +111,9 @@ fun CameraScreen(
                 LocalLifecycleOwner.current
             )
             Canvas(modifier = Modifier.fillMaxSize()) {
+                if(landmarks == null) {
+                    drawRect(color = Color.Transparent, topLeft = Offset(0f, 0f))
+                }
                 landmarks?.let {
                     Timber.tag("points").d("${it[0].position.x} ${it[0].position.y}")
                     val shX = (it[12].position.x + it[11].position.x)/2
@@ -162,7 +170,8 @@ fun CameraScreen(
                                 painter = painterResource(id = R.drawable.round_cameraswitch_40),
                                 contentDescription = "camera selector",
                                 modifier = Modifier.clickable {
-                                        cameraViewModel.changeSelector()
+                                    landmarks = null
+                                    cameraViewModel.changeSelector()
                                     },
                                 tint = Color.White
                             )
@@ -203,12 +212,12 @@ fun CameraScreen(
             (cameraViewModel.lens != backLens && !cameraViewModel.timerRuns)) {
             LaunchedEffect(key1 = capture) {
                 capture?.let {
+//                    imageAnalysis.clearAnalyzer()
 //                    Timber.tag("capturez").d("${it.lordosis}, ${it.headForward},  ${it.roundedShoulders}")
                     cameraViewModel.sendPosture(it)?.let { res ->
                         when(res) {
                             is Task.Success -> {
                                 cameraViewModel.isErrorDialogShowing = false
-                                imageAnalysis.clearAnalyzer()
                                 goToWorkouts()
                             }
 

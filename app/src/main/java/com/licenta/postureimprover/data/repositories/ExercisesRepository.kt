@@ -7,23 +7,23 @@ import com.licenta.postureimprover.data.local.PostureDatabase
 import com.licenta.postureimprover.data.util.networkBoundTask
 import javax.inject.Inject
 
-class WorkoutRepository @Inject constructor(
+class ExercisesRepository @Inject constructor(
     private val api: WorkoutApi,
     private val db: PostureDatabase
 ) {
-    private val dao = db.workoutDao
+    private val dao = db.exercisesDao
 
-    fun getWorkout(token: String) = networkBoundTask(
+    fun getExercises(token: String) = networkBoundTask(
         query = {
-            dao.getWorkout()
+            dao.getAllExercises()
         },
         fetch = {
             api.getWorkoutForUser(token)
         },
         saveFetchResult = {
             db.withTransaction {
-                dao.deleteWorkout()
-                dao.insertWorkout( it.data?.map { it.asExerciseEntity() }!!)
+                dao.deleteAllExercises()
+                dao.insertExercises( it.data?.map { it.asExerciseEntity() }!!)
             }
         }
     )

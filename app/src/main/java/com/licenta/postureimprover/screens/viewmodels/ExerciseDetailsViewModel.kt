@@ -6,18 +6,15 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.licenta.postureimprover.data.api.dto.Exercise
-import com.licenta.postureimprover.data.api.services.WorkoutApi
 import com.licenta.postureimprover.data.local.entities.ExerciseEntity
-import com.licenta.postureimprover.data.repositories.WorkoutRepository
-import com.licenta.postureimprover.data.util.Task
+import com.licenta.postureimprover.data.repositories.ExercisesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class ExerciseDetailsViewModel @Inject constructor(
-    private val workoutRepository: WorkoutRepository,
+    private val exercisesRepository: ExercisesRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -26,7 +23,7 @@ class ExerciseDetailsViewModel @Inject constructor(
 
     fun getExerciseById() {
         viewModelScope.launch {
-            workoutRepository.getExerciseById(exerciseId.toInt()).collect {
+            exercisesRepository.getExerciseById(exerciseId.toInt()).collect {
                 exercise = it
             }
         }

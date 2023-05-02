@@ -8,17 +8,17 @@ import com.licenta.postureimprover.data.local.entities.ExerciseEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface WorkoutDao {
+interface ExercisesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertWorkout(workout: List<ExerciseEntity>)
+    suspend fun insertExercises(exercises: List<ExerciseEntity>)
 
-    @Query("SELECT * FROM workout")
-    fun getWorkout() : Flow<List<ExerciseEntity>>
+    @Query("SELECT * FROM exercises")
+    fun getAllExercises() : Flow<List<ExerciseEntity>>
 
-    @Query("SELECT * FROM workout WHERE id = :id")
+    @Query("SELECT * FROM exercises WHERE id = :id")
     fun getExerciseById(id: Int) : Flow<ExerciseEntity>
 
-    @Query("DELETE FROM workout")
-    fun deleteWorkout()
+    @Query("DELETE FROM exercises")
+    fun deleteAllExercises()
 }

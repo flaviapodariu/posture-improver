@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.licenta.postureimprover.data.local.entities.ExerciseEntity
-import com.licenta.postureimprover.data.repositories.WorkoutRepository
+import com.licenta.postureimprover.data.repositories.ExercisesRepository
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WorkoutViewModel @Inject constructor(
-    private val workoutRepository: WorkoutRepository,
+    private val exercisesRepository: ExercisesRepository,
     prefs: SharedPreferences
 ) : ViewModel() {
 
@@ -24,7 +24,7 @@ class WorkoutViewModel @Inject constructor(
 
      fun getWorkout() {
         viewModelScope.launch {
-            workoutRepository.getWorkout(token).collect {
+            exercisesRepository.getExercises(token).collect {
                 when(it) {
                     is Task.Failure -> println(it.error!!.message)
                     else -> {
