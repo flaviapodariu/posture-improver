@@ -6,6 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.room.Database
+import com.licenta.postureimprover.data.local.PostureDatabase
 import com.licenta.postureimprover.data.local.entities.ExerciseEntity
 import com.licenta.postureimprover.data.repositories.ExercisesRepository
 import com.licenta.postureimprover.data.util.Task

@@ -1,6 +1,7 @@
 package com.licenta.postureimprover.data.repositories
 
 import androidx.room.withTransaction
+import com.licenta.postureimprover.data.api.dto.response.asEntity
 import com.licenta.postureimprover.data.api.dto.response.asExerciseEntity
 import com.licenta.postureimprover.data.api.services.WorkoutApi
 import com.licenta.postureimprover.data.local.PostureDatabase
@@ -11,22 +12,35 @@ class ExercisesRepository @Inject constructor(
     private val api: WorkoutApi,
     private val db: PostureDatabase
 ) {
-    private val dao = db.exercisesDao
+    private val exDao = db.exercisesDao
+    private val exMuscleDao = db.exercisesMuscleDao
 
     fun getExercises(token: String) = networkBoundTask(
         query = {
-            dao.getAllExercises()
+            exDao.getAllExercises()
         },
         fetch = {
             api.getWorkoutForUser(token)
         },
         saveFetchResult = {
             db.withTransaction {
-                dao.deleteAllExercises()
-                dao.insertExercises( it.data?.map { it.asExerciseEntity() }!!)
+                exDao.deleteAllExercises()
+                exMuscleDao.deleteAllExerciseMuscleTypes()
+                exDao.insertExercises( it.data?.map { it.asExerciseEntity() }!!)
+
+                exMuscleDao.insertExerciseMuscleTypes(
+                    it.data.flatMap { current ->
+                        current.targets.map {
+                            it.asEntity(current.exercise.id)
+                        }
+                    }
+                )
+
             }
         }
     )
 
-    fun getExerciseById(id: Int) = dao.getExerciseById(id)
+    fun getExerciseById(id: Int) = exDao.getExerciseById(id)
+
+    fun getMusclesWorkedForExercise(id: Int) = exMuscleDao.getAllMusclesWorkedForExercise(id)
 }

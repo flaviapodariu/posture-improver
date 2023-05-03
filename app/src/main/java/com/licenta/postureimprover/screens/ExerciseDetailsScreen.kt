@@ -21,6 +21,7 @@ fun ExerciseDetailsScreen(
 
     LaunchedEffect(key1 = exerciseDetailsViewModel.exercise) {
         exerciseDetailsViewModel.getExerciseById()
+        exerciseDetailsViewModel.getMuscleDetails()
     }
 
     if(exercise != null) {
@@ -51,7 +52,7 @@ fun ExerciseDetailsScreen(
 
                         Text(
                             modifier = Modifier.fillMaxWidth(),
-                            text= exerciseDetailsViewModel.displayTargetedMuscles(exercise.targetedMuscles),
+                            text= exerciseDetailsViewModel.displayTargetedMuscles(),
                             fontSize = 19.sp,
                             fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center

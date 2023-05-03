@@ -9,7 +9,6 @@ data class ExerciseEntity(
     val id: Int,
     var name: String,
     var description: String,
-    var targetedMuscles: String,
     var imageUrl: String,
     var reps: Int
 )
