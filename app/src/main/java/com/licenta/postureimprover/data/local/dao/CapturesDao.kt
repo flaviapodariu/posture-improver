@@ -12,15 +12,18 @@ import java.time.LocalDate
 interface CapturesDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertCapture(capture: CaptureEntity)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCaptures(captures: List<CaptureEntity>)
 
-    @Query("SELECT * FROM captures")
-    fun getAllCaptures(): Flow<List<CaptureEntity>>
+    @Query("SELECT * FROM captures where userId = :userId")
+    fun getAllCaptures(userId: Int): Flow<List<CaptureEntity>>
 
-    @Query("SELECT * FROM captures WHERE date = :date")
-    fun getAllCapturesByDate(date: LocalDate): Flow<List<CaptureEntity>>
+    @Query("SELECT * FROM captures WHERE date = :date AND userId = :userId")
+    fun getAllCapturesByDate(date: LocalDate, userId: Int): Flow<List<CaptureEntity>>
 
-    @Query("DELETE FROM captures")
-    fun deleteAllCaptures()
+    @Query("DELETE FROM captures WHERE userId = :userId")
+    fun deleteAllCaptures(userId: Int)
 
 }

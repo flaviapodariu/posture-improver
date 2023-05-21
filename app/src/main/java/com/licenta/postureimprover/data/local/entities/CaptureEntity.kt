@@ -3,16 +3,18 @@ package com.licenta.postureimprover.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.licenta.postureimprover.data.api.dto.request.CaptureReq
 import java.time.LocalDate
 
 @Entity(tableName = "Captures")
 data class CaptureEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val userId: Int?,
     var headForward: Float,
     var lordosis: Float,
     var roundedShoulders: Float,
-    var date: LocalDate
+    var date: LocalDate,
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
 )
 
 class LocalDateConverter {
@@ -26,3 +28,9 @@ class LocalDateConverter {
         return LocalDate.parse(string)
     }
 }
+
+fun CaptureEntity.asCaptureReq() = CaptureReq(
+    headForward = this.headForward,
+    roundedShoulders = this.roundedShoulders,
+    lordosis = this.lordosis
+)

@@ -3,6 +3,7 @@ package com.licenta.postureimprover.data.api.dto.response
 import com.licenta.postureimprover.data.api.dto.Exercise
 import com.licenta.postureimprover.data.local.entities.ExerciseEntity
 import com.licenta.postureimprover.data.local.entities.ExerciseMuscleEntity
+import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel.Companion.USER_ID
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,6 +26,7 @@ fun ExerciseMuscleType.asEntity(exerciseId: Int) = ExerciseMuscleEntity(
 )
 fun WorkoutRes.asExerciseEntity() = ExerciseEntity(
     id = exercise.id,
+    userId = USER_ID,
     name = exercise.name,
     description = exercise.description,
     imageUrl = exercise.imageUrl,

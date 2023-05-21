@@ -2,6 +2,8 @@ package com.licenta.postureimprover.data.local
 
 import androidx.room.*
 import androidx.room.migration.AutoMigrationSpec
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.licenta.postureimprover.data.local.dao.CapturesDao
 import com.licenta.postureimprover.data.local.dao.ExerciseMuscleDao
 import com.licenta.postureimprover.data.local.dao.ExercisesDao
@@ -44,4 +46,15 @@ abstract class PostureDatabase: RoomDatabase() {
 
     @DeleteColumn(tableName = "Exercises", columnName = "targetedMuscles")
     class MigrationSpecFrom5To6 : AutoMigrationSpec
+
+    companion object {
+        val migrationFrom6To7 = object: Migration(6,7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE exercises ADD COLUMN userId INTEGER")
+                database.execSQL("ALTER TABLE captures ADD COLUMN userId INTEGER")
+            }
+        }
+    }
+
+
 }

@@ -36,7 +36,7 @@ fun LoginScreen(
         authViewModel.authState?.let {
             when(it) {
                 is Task.Success -> {
-                    authViewModel.onSuccesfulAuth(it.data!!.token, it.data.nickname)
+                    authViewModel.onSuccesfulAuth(it.data!!.userId, it.data.token, it.data.nickname)
                     goToDashboard(it.data.nickname)
                 }
                 is Task.Failure -> {
@@ -126,7 +126,7 @@ fun SignUpScreen(
         authViewModel.authState?.let {
             when(it) {
                 is Task.Success -> {
-                    authViewModel.onSuccesfulAuth(it.data!!.token, it.data.nickname)
+                    authViewModel.onSuccesfulAuth(it.data!!.userId, it.data.token, it.data.nickname)
                     goToDashboard(it.data.nickname)
                 }
                 is Task.Failure ->

@@ -59,6 +59,9 @@ class MainActivity : ComponentActivity() {
                         // this if causes a laggy screen render (dashboard)
                         if(!mainViewModel.isLoading) {
                             Navigation(navController = navController, nickname = mainViewModel.nickname)
+                            navController.graph.forEach {
+                                println("------------${it.route}")
+                            }
                         }
                     }
 
@@ -67,9 +70,4 @@ class MainActivity : ComponentActivity() {
 
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-    }
-
 }

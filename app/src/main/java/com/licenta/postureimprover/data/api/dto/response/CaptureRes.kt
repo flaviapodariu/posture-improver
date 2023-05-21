@@ -1,6 +1,7 @@
 package com.licenta.postureimprover.data.api.dto.response
 
 import com.licenta.postureimprover.data.local.entities.CaptureEntity
+import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel.Companion.USER_ID
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -24,6 +25,7 @@ data class CaptureRes(
 
 fun CaptureRes.asEntity() = CaptureEntity(
     id = id,
+    userId = USER_ID,
     headForward = headForward,
     lordosis = lordosis,
     roundedShoulders = roundedShoulders,

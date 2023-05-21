@@ -7,6 +7,8 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.room.Room
 import com.licenta.postureimprover.data.local.PostureDatabase
+import com.licenta.postureimprover.data.local.PostureDatabase.Companion.migrationFrom6To7
+import com.licenta.postureimprover.data.local.dao.CapturesDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -74,7 +76,8 @@ object AppModule {
     @Provides
     @Singleton
     fun provideRoomDb(app: Application) : PostureDatabase {
-        return Room.databaseBuilder(app, PostureDatabase::class.java,"posture_database").build()
+        return Room.databaseBuilder(app, PostureDatabase::class.java,"posture_database").addMigrations(migrationFrom6To7)
+            .build()
     }
 
 

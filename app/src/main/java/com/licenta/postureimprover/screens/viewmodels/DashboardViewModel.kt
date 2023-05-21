@@ -6,19 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.licenta.postureimprover.data.api.dto.response.CaptureRes
-import com.licenta.postureimprover.data.api.services.CaptureApi
 import com.licenta.postureimprover.data.local.entities.CaptureEntity
 import com.licenta.postureimprover.data.repositories.CaptureRepository
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-typealias CapturesFlow = Flow<Task<List<CaptureEntity>>>
+
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val captureRepository: CaptureRepository,

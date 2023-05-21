@@ -4,9 +4,10 @@ import android.content.Context
 import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.annotation.OptIn
+import androidx.camera.core.ExperimentalGetImage
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
-import com.google.mlkit.vision.pose.PoseDetectorOptionsBase.DetectorMode
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
@@ -24,12 +25,11 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
     lateinit var returnLandmarks: (List<PoseLandmark>) -> Unit
     lateinit var returnPostureCapture: (CaptureReq) -> Unit
 
-
-    @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)
+    @OptIn(ExperimentalGetImage::class)
     override fun analyze(imageProxy: ImageProxy) {
         val poseDetector = PoseDetection.getClient(options)
         val mediaImage = imageProxy.image
-        if (mediaImage != null) {
+        if(mediaImage != null) {
             val inputImage =
                 InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
@@ -38,12 +38,12 @@ class FrameAnalyzer @Inject constructor(): ImageAnalysis.Analyzer {
                 .addOnSuccessListener { landmarks ->
                     val bodyLandmarks = landmarks.allPoseLandmarks
                     // if person was detected list is not empty
-                    if (bodyLandmarks.isNotEmpty()) {
+                    if(bodyLandmarks.isNotEmpty()) {
                         returnLandmarks(bodyLandmarks)
 //                        Timber.tag("landmarkType").d(landmarksToString(bodyLandmarks))
                         val capture = checkPosture(bodyLandmarks)
                         Timber.tag("capturez").d("${capture.lordosis}, ${capture.headForward},  ${capture.roundedShoulders}")
-//                        returnPostureCapture(capture)
+                        returnPostureCapture(capture)
                         imageProxy.close()
                     } else {
                         Toast.makeText(

@@ -24,13 +24,13 @@ import kotlin.math.atan2
  *      that the angle between x+ and AB would be clockwise => negative
  *
  *      the coordinates are given as positives, but the y values are practically negatives
- *      because all the body landmarks are inside the 4h quadrant
+ *      because all the body landmarks are inside the 4th quadrant
  */
 
     fun angle(a: PointF, b: PointF, c:PointF): Float {
       //translate points by -b (b in the vertex of the angle)
-        val atanC = atan2(-c.y + b.y, c.x - b.x)
-        val atanA = atan2(-a.y + b.y, a.x - b.x)
+        val atanC = atan2(c.y - b.y, c.x - b.x)
+        val atanA = atan2(a.y - b.y, a.x - b.x)
 //        Timber.tag("atans").d("${radiansToDegrees(atanC)}, ${radiansToDegrees(atanA)}")
         return abs(radiansToDegrees( atanC - atanA))
     }

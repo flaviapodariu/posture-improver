@@ -13,12 +13,12 @@ interface ExercisesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertExercises(exercises: List<ExerciseEntity>)
 
-    @Query("SELECT * FROM exercises")
-    fun getAllExercises() : Flow<List<ExerciseEntity>>
+    @Query("SELECT * FROM exercises WHERE userId = :userId")
+    fun getAllExercises(userId: Int) : Flow<List<ExerciseEntity>>
 
     @Query("SELECT * FROM exercises WHERE id = :id")
     fun getExerciseById(id: Int) : Flow<ExerciseEntity>
 
-    @Query("DELETE FROM exercises")
-    fun deleteAllExercises()
+    @Query("DELETE FROM exercises WHERE userId = :userId")
+    fun deleteAllExercises(userId: Int)
 }

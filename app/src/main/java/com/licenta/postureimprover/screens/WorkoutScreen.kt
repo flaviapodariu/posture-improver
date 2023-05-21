@@ -90,34 +90,39 @@ fun WorkoutScreen(
         }
     }
 }
+
 @Composable
 fun ExerciseItem(
     item: ExerciseEntity,
-    goToExerciseDetail: (exerciseId: String) -> Unit) {
+    goToExerciseDetail: (exerciseId: String) -> Unit
+) {
 
     Card(
-        modifier= Modifier.clickable(
+        modifier = Modifier.clickable(
             enabled = true,
             onClick = {
-                goToExerciseDetail("${ item.id }")
+                goToExerciseDetail("${item.id}")
             }
         ),
-        shape= RoundedCornerShape(40.dp),
-        colors= CardDefaults.cardColors(containerColor = Color.White),
+        shape = RoundedCornerShape(40.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(2.dp)
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .shadow(2.dp)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .shadow(2.dp)
+        ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
+                Column(
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp)
                 ) {
                     Text(
-                        text= item.name,
+                        text = item.name,
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W400,
                     )
@@ -125,7 +130,7 @@ fun ExerciseItem(
                     Spacer(modifier = Modifier.padding(top = 5.dp))
 
                     Text(
-                        text= "${item.reps} reps",
+                        text = "${item.reps} reps",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Light,
                     )
@@ -139,7 +144,7 @@ fun ExerciseItem(
                 ) {
                     AsyncImage(
                         model = item.imageUrl,
-                        contentDescription = null,
+                        contentDescription = item.name,
                         modifier = Modifier
                             .clip(RoundedCornerShape(20.dp))
                             .width(100.dp)
@@ -149,7 +154,7 @@ fun ExerciseItem(
                     )
 
                 }
-        }
+            }
 
         }
 

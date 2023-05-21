@@ -1,9 +1,6 @@
 package com.licenta.postureimprover.screens.navigation
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -17,8 +14,6 @@ import com.licenta.postureimprover.screens.*
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Navigation(navController: NavHostController, nickname: String) {
-
-    println("y nickname is $nickname")
 
         NavHost(
             navController = navController,
@@ -46,7 +41,16 @@ fun Navigation(navController: NavHostController, nickname: String) {
                     }
                 )
             }
-            composable(route= Routes.SignUp.route) {
+            composable(
+                route= Routes.SignUp.route + "?migration={migration}",
+                arguments= listOf(
+                    navArgument("migration") {
+                        type = NavType.StringType
+                        defaultValue = "false"
+                        nullable = true
+                    }
+                )
+            ) {
                 SignUpScreen(
                     goToDashboard = {
                         navController.navigate(Routes.Dashboard.passArgs(it))
@@ -85,9 +89,14 @@ fun Navigation(navController: NavHostController, nickname: String) {
             }
 
             composable(route= Routes.Settings.route) {
-                SettingsScreen(goToLogin = {
-                    navController.navigate(Routes.Login.route)
-                })
+                SettingsScreen(
+                    goToLogin = {
+                        navController.navigate(Routes.Login.route)
+                    },
+                    goToSignUp = {
+                        navController.navigate("signup?migration=true")
+                    }
+                )
             }
 
             composable(route= Routes.Workouts.route) {

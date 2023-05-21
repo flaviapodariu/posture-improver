@@ -40,7 +40,8 @@ class ExerciseDetailsViewModel @Inject constructor(
             exercisesRepository.getMusclesWorkedForExercise(exerciseId.toInt()).collect() {
                 musclesWorked = it
                 println(musclesWorked)
-            }        }
+            }
+        }
     }
 
     fun displayTargetedMuscles() : String {

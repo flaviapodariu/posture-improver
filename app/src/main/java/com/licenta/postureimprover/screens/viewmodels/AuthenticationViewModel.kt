@@ -4,12 +4,16 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.licenta.postureimprover.data.api.dto.request.LoginReq
 import com.licenta.postureimprover.data.api.dto.request.RegisterReq
 import com.licenta.postureimprover.data.api.dto.response.AuthRes
 import com.licenta.postureimprover.data.api.services.AuthApi
+import com.licenta.postureimprover.data.local.entities.asUserExercise
+import com.licenta.postureimprover.data.repositories.CaptureRepository
+import com.licenta.postureimprover.data.repositories.ExercisesRepository
 import com.licenta.postureimprover.data.util.Task
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,9 +22,14 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
     private val authApi: AuthApi,
-    private val prefs: SharedPreferences
+    private val prefs: SharedPreferences,
+    private var captureRepository: CaptureRepository,
+    private var exercisesRepository: ExercisesRepository,
+    savedStateHandle: SavedStateHandle
 ): ViewModel()
 {
+    val alsoMigrateData: String? = savedStateHandle["migration"]
+
     var email: String by mutableStateOf("")
     var nickname: String by mutableStateOf("")
     var visitorNickname: String by mutableStateOf("")
@@ -51,9 +60,18 @@ class AuthenticationViewModel @Inject constructor(
         confirmPassword = confirmPassState
     }
 
-    fun onSuccesfulAuth(token: String, nickname: String) {
+    fun onSuccesfulAuth(userId:Int, token: String, nickname: String) {
         prefs.edit().putString("jwt", token).apply()
+        prefs.edit().putInt("userId", userId).apply()
         prefs.edit().putString("nickname", nickname).apply()
+
+        alsoMigrateData?.let {
+            if(it == "true") {
+                migrateUserData(token)
+            }
+        }
+
+        USER_ID = userId
     }
 
     fun login() {
@@ -66,6 +84,7 @@ class AuthenticationViewModel @Inject constructor(
 
     fun logout() {
         prefs.edit().remove("jwt").apply()
+        prefs.edit().remove("userId").apply()
         authState = null
     }
 
@@ -76,7 +95,6 @@ class AuthenticationViewModel @Inject constructor(
                     authState = it
                 }
             }
-
         }
     }
 
@@ -85,10 +103,30 @@ class AuthenticationViewModel @Inject constructor(
     }
 
     fun createVisitorAccount() {
+        USER_ID = 0
         prefs.edit().putBoolean("isVisitor", true).apply()
         prefs.edit().putString("nickname", visitorNickname).apply()
         showVisitorDialog = false
     }
 
+    private fun migrateUserData(token: String) {
+        viewModelScope.launch {
+            try {
+                val captures = captureRepository.getLocalCaptures()
+                captureRepository.sendBulkCaptures(captures, token)
+
+                val exercises = exercisesRepository.getAllExercisesForCurrentUser()
+                    .map{ it.asUserExercise() }
+                exercisesRepository.sendBulkExercises(exercises, token)
+
+            }
+            catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+    companion object {
+        var USER_ID = 0
+    }
 
 }

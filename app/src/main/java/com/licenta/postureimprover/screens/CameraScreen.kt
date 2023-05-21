@@ -1,7 +1,6 @@
 package com.licenta.postureimprover.screens
 
 
-import android.annotation.SuppressLint
 import android.content.Context
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
@@ -52,6 +51,7 @@ import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.screens.components.CameraTimer
 import com.licenta.postureimprover.screens.components.CommonDialog
 import com.licenta.postureimprover.screens.components.TimerOptions
+import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel.Companion.USER_ID
 import com.licenta.postureimprover.screens.viewmodels.CameraViewModel
 import com.licenta.postureimprover.theme.AcidYellow
 import com.licenta.postureimprover.theme.CameraShutter
@@ -209,23 +209,51 @@ fun CameraScreen(
             )
         }
         if((cameraViewModel.lens == backLens && cameraViewModel.shutterFired) ||
-            (cameraViewModel.lens != backLens && !cameraViewModel.timerRuns)) {
+            (cameraViewModel.lens != backLens && !cameraViewModel.timerRuns && cameraViewModel.shutterFired)) {
             LaunchedEffect(key1 = capture) {
                 capture?.let {
 //                    imageAnalysis.clearAnalyzer()
 //                    Timber.tag("capturez").d("${it.lordosis}, ${it.headForward},  ${it.roundedShoulders}")
-                    cameraViewModel.sendPosture(it)?.let { res ->
-                        when(res) {
-                            is Task.Success -> {
-                                cameraViewModel.isErrorDialogShowing = false
-                                goToWorkouts()
-                            }
 
-                            is Task.Failure -> {
-                                cameraViewModel.isErrorDialogShowing = true
+                    if(USER_ID == 0) {
+                        cameraViewModel.saveCaptureLocally(it)
+                        cameraViewModel.getWorkoutFromCapturesAsync(it).let { result ->
+                            val res = result.await()
+
+                            when(res) {
+                                is Task.Success -> {
+                                    cameraViewModel.isErrorDialogShowing = false
+                                    if(res.data != null)
+                                        cameraViewModel.saveWorkoutLocally(res.data)
+
+                                    goToWorkouts()
+                                }
+                                is Task.Failure -> {
+                                    cameraViewModel.isErrorDialogShowing = true
+                                }
+                                else -> Timber.tag("captureRes").d("loading")
                             }
-                            else -> Unit
                         }
+                    }
+                    else {
+                        cameraViewModel.sendPostureAsync(it).let { result ->
+                            val res = result.await()
+
+                            when(res) {
+                                is Task.Success -> {
+                                    cameraViewModel.isErrorDialogShowing = false
+                                    goToWorkouts()
+                                }
+
+                                is Task.Failure -> {
+                                    cameraViewModel.isErrorDialogShowing = true
+                                }
+
+                                else -> Timber.tag("captureRes").d("loading")
+
+                            }
+                        }
+
                     }
 
                 }

@@ -28,9 +28,4 @@ object ViewModelScope {
         return CaptureRepository(api, db)
     }
 
-//    @Provides
-//    @ViewModelScoped
-//    fun provideWorkoutRepository(api: WorkoutApi, db:PostureDatabase) : WorkoutRepository {
-//        return WorkoutRepository(api, db)
-//    }
 }

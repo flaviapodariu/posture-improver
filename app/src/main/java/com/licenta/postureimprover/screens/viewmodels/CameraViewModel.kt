@@ -12,16 +12,21 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.licenta.postureimprover.R
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
+import com.licenta.postureimprover.data.api.dto.request.asCaptureEntity
+import com.licenta.postureimprover.data.api.dto.response.WorkoutRes
 import com.licenta.postureimprover.data.api.services.CaptureApi
+import com.licenta.postureimprover.data.repositories.CaptureRepository
+import com.licenta.postureimprover.data.repositories.ExercisesRepository
 import com.licenta.postureimprover.data.util.Task
 import com.licenta.postureimprover.util.FrameAnalyzer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.concurrent.ExecutorService
 import javax.inject.Inject
@@ -34,6 +39,8 @@ class CameraViewModel @Inject constructor(
     var analyzer: FrameAnalyzer,
     var executor: ExecutorService,
     var captureApi: CaptureApi,
+    val captureRepo: CaptureRepository,
+    val exerciseRepo: ExercisesRepository,
     var prefs: SharedPreferences
 ): ViewModel() {
 
@@ -68,9 +75,8 @@ class CameraViewModel @Inject constructor(
     fun shutterPressed() {
         if(lens == CameraSelector.LENS_FACING_FRONT)
             timerRuns = true
-        else {
-            shutterFired = true
-        }
+        shutterFired = true
+
     }
 
     fun toggleTimerOptionsVisibility() {
@@ -87,15 +93,31 @@ class CameraViewModel @Inject constructor(
         }
     }
 
-    fun sendPosture(capture: CaptureReq) : Task<Boolean>? {
-        var result: Task<Boolean>? = null
-        viewModelScope.launch {
-            captureApi.insertCapture(capture, token)?.let {
-                result = it
-            }
-            println("$capture somecapture please")
+    fun sendPostureAsync(capture: CaptureReq) : Deferred<Task<Boolean>?> {
+        val defferedResult = viewModelScope.async {
+           captureApi.insertCapture(capture, token)
         }
-        return result
+        return defferedResult
+    }
+
+    fun saveCaptureLocally(capture: CaptureReq) {
+        val captureEntity = capture.asCaptureEntity()
+        viewModelScope.launch{
+            captureRepo.saveCaptureLocally(captureEntity)
+
+        }
+    }
+    fun saveWorkoutLocally(exercises: List<WorkoutRes>) {
+        viewModelScope.launch{
+            exerciseRepo.saveExercisesLocally(exercises)
+        }
+    }
+
+    fun getWorkoutFromCapturesAsync(capture: CaptureReq) : Deferred<Task<List<WorkoutRes>>?>{
+        val defferedRes = viewModelScope.async {
+            captureApi.getWorkoutFromCaptures(capture)
+        }
+        return defferedRes
     }
 
     fun getImageAnalysis(
@@ -106,7 +128,7 @@ class CameraViewModel @Inject constructor(
         return ImageAnalysis.Builder()
             .setTargetResolution(Size(1080, 2400))   // ??? height
             .setBackpressureStrategy(STRATEGY_KEEP_ONLY_LATEST)
-            .build().also{
+            .build().also {
                 analyzer.context = context
                 analyzer.returnLandmarks = getLandmarks
                 analyzer.returnPostureCapture = getPostureCapture

@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 6,
-    "identityHash": "9c00d47e2f1cbbb97f95939df8491bb1",
+    "version": 7,
+    "identityHash": "0fd33638f07de4d35be4c59c00dd58f3",
     "entities": [
       {
         "tableName": "Captures",
@@ -56,7 +56,7 @@
       },
       {
         "tableName": "Exercises",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `reps` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userId` INTEGER DEFAULT 0, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `imageUrl` TEXT NOT NULL, `reps` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -68,7 +68,8 @@
             "fieldPath": "userId",
             "columnName": "userId",
             "affinity": "INTEGER",
-            "notNull": false
+            "notNull": false,
+            "defaultValue": "0"
           },
           {
             "fieldPath": "name",
@@ -158,7 +159,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9c00d47e2f1cbbb97f95939df8491bb1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0fd33638f07de4d35be4c59c00dd58f3')"
     ]
   }
 }
