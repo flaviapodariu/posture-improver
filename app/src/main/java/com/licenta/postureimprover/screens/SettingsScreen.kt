@@ -14,21 +14,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel.Companion.USER_ID
 import com.licenta.postureimprover.screens.viewmodels.MainViewModel
-import com.licenta.postureimprover.screens.viewmodels.SettingsViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     goToLogin: () -> Unit = {},
     goToSignUp: () -> Unit = {},
     authViewModel: AuthenticationViewModel = hiltViewModel(),
     mainViewModel: MainViewModel = hiltViewModel()
-    ) {
+) {
     Column(modifier = Modifier.fillMaxSize()) {
 
         ListItem(
             modifier = Modifier.fillMaxWidth(),
-            headlineText = { Text(text = "Log Out") },
+            headlineContent = { Text(text = "Log Out") },
             trailingContent = {
                 IconButton(
                     onClick = { authViewModel.logout().also{
@@ -46,7 +44,7 @@ fun SettingsScreen(
 
         ListItem(
             modifier = Modifier.fillMaxWidth(),
-            headlineText = { Text(text= "Dark Mode") },
+            headlineContent = { Text(text= "Dark Mode") },
             trailingContent = {
                 Switch(
                     checked = mainViewModel.darkTheme,
@@ -65,7 +63,8 @@ fun SettingsScreen(
                     .clickable {
                         goToSignUp()
                     },
-                headlineText = { Text(text = "Create account") },
+
+                headlineContent = { Text(text = "Create account") },
                 trailingContent = {
                     Icon(
                         imageVector = Icons.Rounded.AccountBox,
