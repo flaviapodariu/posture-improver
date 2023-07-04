@@ -89,9 +89,7 @@ fun CameraScreen(
     } )
 
     val context = LocalContext.current
-    var landmarks: List<PoseLandmark>? by remember {
-        mutableStateOf(null)
-    }
+    var landmarks: List<PoseLandmark>? = null
     var capture: CaptureReq? = null
     val imageAnalysis = cameraViewModel.getImageAnalysis(
         context,
@@ -115,7 +113,7 @@ fun CameraScreen(
                     drawRect(color = Color.Transparent, topLeft = Offset(0f, 0f))
                 }
                 landmarks?.let {
-                    Timber.tag("points").d("${it[0].position.x} ${it[0].position.y}")
+                    Timber.tag("points").d("${it[0].position.x} ${it[0].inFrameLikelihood}")
                     val shX = (it[12].position.x + it[11].position.x)/2
                     val shY = (it[12].position.y + it[11].position.y)/2
 
@@ -131,8 +129,8 @@ fun CameraScreen(
                     val brush = Brush.linearGradient(listOf(Orange50, Orange50))
                     val brushDistance = Brush.linearGradient(listOf(Purple80, Purple80))
                     val offsets = listOf(
-                        Offset(1080 - it[12].position.x, it[12].position.y - 80),
-                        Offset(1080 - it[11].position.x, it[11].position.y - 80),
+                        Offset(1080 - it[12].position.x, it[12].position.y - 80),  //right sh
+                        Offset(1080 - it[11].position.x, it[11].position.y - 80), // left sh
                         Offset(1080 - c7X , c7Y - 80),
                         Offset(1080 - earsX, earsY - 80)
                     )
@@ -143,8 +141,8 @@ fun CameraScreen(
                         brush,
                         strokeWidth = 10.0f
                     )
-                    drawLine(brush, offsets[0], Offset(1080 - it[0].position.x, it[0].position.y - 80), strokeWidth = 10.0f)
                     drawLine(brush, offsets[0], Offset(1080 - it[24].position.x, it[24].position.y - 80), strokeWidth = 10.0f)
+                    drawLine(brush, offsets[1], Offset(1080 - it[23].position.x, it[23].position.y - 80), strokeWidth = 10.0f)
                     drawLine(brushDistance, offsets[3], Offset(1080 - kneesX, kneesY - 80), strokeWidth = 13f)
                 }
             }
@@ -292,6 +290,7 @@ fun CameraView(
 
 //    only recompose if selector is changed (from back to front facing camera)
     LaunchedEffect(key1 = selector , block = {
+
         try{
             provider.unbindAll()
             provider.bindToLifecycle(

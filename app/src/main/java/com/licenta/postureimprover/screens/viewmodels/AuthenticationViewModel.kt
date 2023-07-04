@@ -85,6 +85,11 @@ class AuthenticationViewModel @Inject constructor(
     fun logout() {
         prefs.edit().remove("jwt").apply()
         prefs.edit().remove("userId").apply()
+        viewModelScope.launch {
+            captureRepository.deleteAllCaptures()
+            exercisesRepository.deleteAllExercises()
+        }
+
         authState = null
     }
 

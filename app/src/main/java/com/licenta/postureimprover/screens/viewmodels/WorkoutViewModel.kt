@@ -1,6 +1,8 @@
 package com.licenta.postureimprover.screens.viewmodels
 
 import android.content.SharedPreferences
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -24,7 +26,7 @@ class WorkoutViewModel @Inject constructor(
     val token = prefs.getString("jwt", "no_token") as String
     var exerciseList: List<ExerciseEntity> by mutableStateOf(listOf())
 
-     fun getWorkout() {
+    fun getWorkout() {
         viewModelScope.launch {
             exercisesRepository.getExercises(token).collect {
                 when(it) {

@@ -10,7 +10,9 @@ import com.licenta.postureimprover.data.local.PostureDatabase
 import com.licenta.postureimprover.data.local.entities.ExerciseEntity
 import com.licenta.postureimprover.data.util.networkBoundTask
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel.Companion.USER_ID
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class ExercisesRepository @Inject constructor(
@@ -71,4 +73,11 @@ class ExercisesRepository @Inject constructor(
     fun getExerciseById(id: Int) = exDao.getExerciseById(id)
 
     fun getMusclesWorkedForExercise(id: Int) = exMuscleDao.getAllMusclesWorkedForExercise(id)
+
+    suspend fun deleteAllExercises() {
+        withContext(Dispatchers.IO) {
+            exMuscleDao.deleteAllExerciseMuscleTypes()
+            exDao.deleteAllExercises(USER_ID)
+        }
+    }
 }

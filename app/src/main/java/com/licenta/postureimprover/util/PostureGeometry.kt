@@ -18,6 +18,8 @@ import kotlin.math.atan2
         return ((radians * 180) / Math.PI).toFloat()
     }
 
+    const val HEAD_FORWARD_NORMAL = 53f
+    const val ROUNDED_SHOULDERS_NORMAL = 52f
 /**
  *  Reason for minus when computing angle:
  *      segment AB (torso-shoulder) will always be under x+ axis, meaning
@@ -35,10 +37,12 @@ import kotlin.math.atan2
         return abs(radiansToDegrees( atanC - atanA))
     }
 
-    fun lordosis(ears: PointF, torso: PointF, knees: PointF): Float {
-        val degrees = angle(knees, torso, ears)
-        val diffX = abs(ears.x - knees.x)
-        Timber.tag("lordosiss").d("$diffX")
+    fun lordosis(ankles: PointF, midPoint: PointF, shoulders: PointF): Float {
+        var degrees = angle(ankles, midPoint, shoulders)
+        Timber.tag("lordosiss").d("$degrees")
+        if(degrees > 180){
+            degrees = 360 - degrees
+        }
         return degrees
     }
 
@@ -79,6 +83,11 @@ import kotlin.math.atan2
         val shoulders = mean(body[11].position, body[12].position)
         val torso = mean(body[23].position, body[24].position)
         val knees = mean(body[25].position, body[26].position)
+        val ankles = mean(body[27].position, body[28].position)
+        val midpointToShoulders =  PointF(
+            ankles.x,
+            (ankles.y + shoulders.y) / 2
+        )
 
         val C7 = PointF(
             shoulders.x - (nose.x - ears.x)/2,
@@ -88,7 +97,7 @@ import kotlin.math.atan2
 
         return CaptureReq(
             headForward = headForward(C7, ears),
-            lordosis = lordosis(ears, torso, knees),
+            lordosis = lordosis(ankles, midpointToShoulders, shoulders),
             roundedShoulders = roundedShoulders(C7, shoulders)
         )
 

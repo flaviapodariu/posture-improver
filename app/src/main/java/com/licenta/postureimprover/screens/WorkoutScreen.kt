@@ -16,12 +16,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,7 +44,6 @@ import coil.compose.AsyncImage
 import com.licenta.postureimprover.data.local.entities.ExerciseEntity
 import com.licenta.postureimprover.screens.viewmodels.WorkoutViewModel
 import com.licenta.postureimprover.theme.PurpleGrey40
-
 @Composable
 fun WorkoutScreen(
     workoutViewModel: WorkoutViewModel = hiltViewModel(),
@@ -80,9 +83,9 @@ fun WorkoutScreen(
                 )
             }
 
-            LazyColumn(modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()) {
+            LazyColumn(
+                modifier = Modifier.fillMaxWidth().wrapContentHeight()
+            ) {
                 items(workoutViewModel.exerciseList, key= { it.id }) {
                     ExerciseItem(item = it, goToExerciseDetail = goToExerciseDetail)
                 }
@@ -137,7 +140,7 @@ fun ExerciseItem(
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth().wrapContentHeight()
                         .padding(end = 15.dp),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically

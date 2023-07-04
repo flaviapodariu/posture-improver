@@ -18,7 +18,7 @@ class TimerDialogViewModel @Inject constructor(
     var showDialog3: Boolean  by mutableStateOf(false)
 
 
-    private val dialog1Text = "You have a 5 second timer to capture your posture!"
+    private val dialog1Text = "You have a 5 second timer to capture your posture! If it's not enough, you can set a longer timer."
     private val dialog2Text = "Make sure to stand sideways towards the camera, comfortably, like you would at any time."
     private val dialog3Text = "Please make sure that your full body is visible in the picture :)"
 

@@ -42,20 +42,6 @@ fun SettingsScreen(
             }
         )
 
-        ListItem(
-            modifier = Modifier.fillMaxWidth(),
-            headlineContent = { Text(text= "Dark Mode") },
-            trailingContent = {
-                Switch(
-                    checked = mainViewModel.darkTheme,
-                    onCheckedChange = {
-                        mainViewModel.darkTheme = !mainViewModel.darkTheme
-                    },
-                    enabled = true
-                )
-            }
-        )
-
         if(USER_ID == 0) {
             ListItem(
                 modifier = Modifier

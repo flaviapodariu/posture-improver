@@ -2,6 +2,7 @@ package com.licenta.postureimprover.util
 
 import com.patrykandpatrick.vico.core.axis.AxisPosition
 import com.patrykandpatrick.vico.core.axis.formatter.AxisValueFormatter
+import com.patrykandpatrick.vico.core.chart.values.AxisValuesOverrider
 import com.patrykandpatrick.vico.core.entry.ChartEntry
 import java.time.LocalDate
 
@@ -21,3 +22,6 @@ val axisValueFormatter = AxisValueFormatter<AxisPosition.Horizontal.Bottom> { va
         ?.run { "$dayOfMonth/$monthValue" }
         .orEmpty()
 }
+
+val yHFAxisValueOverrider = AxisValuesOverrider.fixed(maxY = HEAD_FORWARD_NORMAL + 20)
+val yRSAxisValueOverrider = AxisValuesOverrider.fixed(maxY = ROUNDED_SHOULDERS_NORMAL + 20)

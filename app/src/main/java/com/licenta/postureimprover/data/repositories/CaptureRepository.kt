@@ -8,7 +8,9 @@ import com.licenta.postureimprover.data.local.entities.CaptureEntity
 import com.licenta.postureimprover.data.local.entities.asCaptureReq
 import com.licenta.postureimprover.data.util.networkBoundTask
 import com.licenta.postureimprover.screens.viewmodels.AuthenticationViewModel.Companion.USER_ID
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class CaptureRepository @Inject constructor(
@@ -42,6 +44,12 @@ class CaptureRepository @Inject constructor(
     suspend fun sendBulkCaptures(captures: List<CaptureEntity>, token: String) {
         captures.forEach {
             api.insertCapture(it.asCaptureReq(), token)
+        }
+    }
+
+    suspend fun deleteAllCaptures() {
+        withContext(Dispatchers.IO) {
+            captureDao.deleteAllCaptures(USER_ID)
         }
     }
 

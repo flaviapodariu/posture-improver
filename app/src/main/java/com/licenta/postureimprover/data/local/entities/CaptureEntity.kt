@@ -3,7 +3,9 @@ package com.licenta.postureimprover.data.local.entities
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
+import com.himanshoe.kalendar.KalendarEvent
 import com.licenta.postureimprover.data.api.dto.request.CaptureReq
+import kotlinx.datetime.toKotlinLocalDate
 import java.time.LocalDate
 
 @Entity(tableName = "Captures")
