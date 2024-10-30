@@ -18,22 +18,19 @@ For classifying an image capture in one of the above categories, I am collecting
 
 
 After some research, I selected 3 points to form an angle for each of the problems above. The angles computed on the captured image are compared to standard values typically seen in healthy people.
-
-<div style="display: flex; gap: 20px; justify-content: center;">
-  <div style="text-align: center;">
-    <h3>Head Forward</h3>
-    <img src="images/cv_angle.png" alt="Head Forward angle" style="width: 200px; height: auto;">
-  </div>
-  
-  <div style="text-align: center;">
-    <h3>Lordosis</h3>
-    <img src="images/pelvic_tilt.png" alt="Lordosis angle" style="width: 230px; height: auto;">
-  </div>
-  
-  <div style="text-align: center;">
-    <h3>Rounded Shoulders</h3>
-    <img src="images/rsp.png" alt="Rounded Shoulders angle" style="width: 190px; height: auto;">
-  </div>
+<div align="center">
+  <table>
+    <tr>
+      <th>Head Forward</th>
+      <th>Lordosis</th>
+      <th>Rounded Shoulders</th>
+    </tr>
+    <tr>
+      <td><img src="images/cv_angle.png" alt="Head Forward angle" width="200"></td>
+      <td><img src="images/pelvic_tilt.png" alt="Lordosis angle" width="230"></td>
+      <td><img src="images/rsp.png" alt="Rounded Shoulders angle" width="190"></td>
+    </tr>
+  </table>
 </div>
 
 Most of the points were already present on the Pose Detection API, however, the C7 point needed for handling Head Forward and Rounded Shoulders was missing. After some further research and testing on multiple subjects, I computed an approximation based on other points from the API:
